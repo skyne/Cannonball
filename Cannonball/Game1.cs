@@ -35,7 +35,7 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            Console.WriteLine("Game init");
             base.Initialize();
         }
 
