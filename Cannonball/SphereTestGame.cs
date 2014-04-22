@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using Cannonball.GameEngine.Objects;
 #endregion
 
 namespace Cannonball
@@ -14,13 +15,21 @@ namespace Cannonball
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class SphereTestGame : Game
     {
+        private const int maximumNumberOfSpheres = 100;
+        const float worldSize = 20f;
+
+        private static float RandomFloat(Random random, float min, float max)
+        {
+            return (float)random.NextDouble() * (max - min) + min;
+        }
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
 
-
-        public Game1()
+        public SphereTestGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -50,6 +59,52 @@ namespace Cannonball
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            CreateSpheres();
+        }
+
+        private void CreateSpheres()
+        {
+            // Create a random number generator
+            Random random = new Random();
+
+            // These are the various colors we use when creating the spheres
+            Color[] sphereColors = new[]
+            {
+                Color.Red,
+                Color.Blue,
+                Color.Green,
+                Color.Orange,
+                Color.Pink,
+                Color.Purple,
+                Color.Yellow
+            };
+
+            // The radius of a sphere
+            const float radius = 1f;
+
+            for (int i = 0; i < maximumNumberOfSpheres; i++)
+            {
+                // Create the sphere
+                Sphere sphere = new Sphere(GraphicsDevice, radius);
+
+                // Position the sphere in our world
+                sphere.Position = new Vector3(
+                    RandomFloat(random, -worldSize + radius, worldSize - radius),
+                    RandomFloat(random, radius, worldSize - radius),
+                    RandomFloat(random, -worldSize + radius, worldSize - radius));
+
+                // Pick a random color for the sphere
+                sphere.Color = sphereColors[random.Next(sphereColors.Length)];
+
+                // Create a random velocity vector
+                sphere.Velocity = new Vector3(
+                    RandomFloat(random, -10f, 10f),
+                    RandomFloat(random, -10f, 10f),
+                    RandomFloat(random, -10f, 10f));
+
+                // Add the sphere to our array
+                spheres[i] = sphere;
+            }
         }
 
         /// <summary>
@@ -85,6 +140,22 @@ namespace Cannonball
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            // Create a view and projection matrix for our camera
+            Matrix view = Matrix.CreateLookAt(
+                new Vector3(worldSize, worldSize, worldSize) * 1.5f, Vector3.Zero, Vector3.Up);
+            Matrix projection = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.01f, 100f);
+
+            // Set our sampler state to allow the ground to have a repeated texture
+            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
+            // Draw the ground scaled to our world
+
+            // Draw all of our spheres
+            for (int i = 0; i < maximumNumberOfSpheres; i++)
+            {
+                spheres[i].Draw(view, projection);
+            }
 
             base.Draw(gameTime);
         }
