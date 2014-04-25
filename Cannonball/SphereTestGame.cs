@@ -18,7 +18,7 @@ namespace Cannonball
     public class SphereTestGame : Game
     {
         private const int maximumNumberOfSpheres = 100;
-        const float worldSize = 20f;
+        const float worldSize = 50f;
 
         private static float RandomFloat(Random random, float min, float max)
         {
@@ -70,13 +70,9 @@ namespace Cannonball
             // These are the various colors we use when creating the spheres
             Color[] sphereColors = new[]
             {
-                Color.Red,
-                Color.Blue,
-                Color.Green,
-                Color.Orange,
-                Color.Pink,
-                Color.Purple,
-                Color.Yellow
+                Color.Orange
+                , Color.White
+                , Color.GhostWhite
             };
 
             // The radius of a sphere
@@ -137,7 +133,7 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             // Create a view and projection matrix for our camera
