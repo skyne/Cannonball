@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball", "Cannonball\Cannonball.csproj", "{8656D3BB-74F3-48D1-ADD7-B57F05620600}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Engine", "Cannonball.Engine\Cannonball.Engine.csproj", "{483274A5-69F7-4444-B8BC-8C2723D5FEFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{8656D3BB-74F3-48D1-ADD7-B57F05620600}.Debug|x86.Build.0 = Debug|x86
 		{8656D3BB-74F3-48D1-ADD7-B57F05620600}.Release|x86.ActiveCfg = Release|x86
 		{8656D3BB-74F3-48D1-ADD7-B57F05620600}.Release|x86.Build.0 = Release|x86
+		{483274A5-69F7-4444-B8BC-8C2723D5FEFC}.Debug|x86.ActiveCfg = Debug|x86
+		{483274A5-69F7-4444-B8BC-8C2723D5FEFC}.Debug|x86.Build.0 = Debug|x86
+		{483274A5-69F7-4444-B8BC-8C2723D5FEFC}.Release|x86.ActiveCfg = Release|x86
+		{483274A5-69F7-4444-B8BC-8C2723D5FEFC}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

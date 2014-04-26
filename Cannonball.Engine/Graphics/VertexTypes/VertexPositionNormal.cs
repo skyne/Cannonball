@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cannonball.Graphics
+namespace Cannonball.Engine.Graphics
 {
     /// <summary>
     /// Custom vertex type for vertices that have just a

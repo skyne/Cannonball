@@ -1,4 +1,4 @@
-﻿using Cannonball.Utils.Primitives;
+﻿using Cannonball.Engine.Procedural.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cannonball.GameEngine.Objects
+namespace Cannonball.Engine.GameObjects
 {
     public class Sphere
     {

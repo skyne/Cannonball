@@ -1,4 +1,4 @@
-﻿using Cannonball.Graphics;
+﻿using Cannonball.Engine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cannonball.Utils.Primitives
+namespace Cannonball.Engine.Procedural.Objects
 {
     /// <summary>
     /// Base class for simple geometric primitive models. This provides a vertex

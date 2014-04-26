@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
-using Cannonball.GameEngine.Objects;
+using Cannonball.Engine.GameObjects;
 #endregion
 
 namespace Cannonball
@@ -28,6 +28,7 @@ namespace Cannonball
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
+        RenderTarget2D sceneTarget;
 
         public SphereTestGame()
             : base()
@@ -45,6 +46,12 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            sceneTarget = new RenderTarget2D(GraphicsDevice
+                , GraphicsDevice.PresentationParameters.BackBufferWidth
+                , GraphicsDevice.PresentationParameters.BackBufferHeight
+                , false
+                , GraphicsDevice.PresentationParameters.BackBufferFormat
+                , GraphicsDevice.PresentationParameters.DepthStencilFormat);
 
             base.Initialize();
         }
@@ -127,12 +134,12 @@ namespace Cannonball
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
+        private void DrawScene(GameTime gameTime)
         {
+            GraphicsDevice.SetRenderTarget(sceneTarget);
+
+            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
@@ -142,16 +149,34 @@ namespace Cannonball
             Matrix projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.01f, 100f);
 
-            // Set our sampler state to allow the ground to have a repeated texture
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-
-            // Draw the ground scaled to our world
-
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
                 spheres[i].Draw(view, projection);
             }
+
+            GraphicsDevice.SetRenderTarget(null);
+        }
+
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            DrawScene(gameTime);
+
+            GraphicsDevice.Clear(Color.Black);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+                        SamplerState.LinearClamp, DepthStencilState.Default,
+                        RasterizerState.CullNone);
+
+            spriteBatch.Draw(sceneTarget, new Rectangle(0, 0
+                , GraphicsDevice.PresentationParameters.BackBufferWidth
+                , GraphicsDevice.PresentationParameters.BackBufferHeight), Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

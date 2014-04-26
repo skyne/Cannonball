@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cannonball.Utils.Primitives
+namespace Cannonball.Engine.Procedural.Objects
 {
     /// <summary>
     /// Geometric primitive class for drawing spheres.
