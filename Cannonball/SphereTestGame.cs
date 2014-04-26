@@ -21,11 +21,6 @@ namespace Cannonball
         private const int maximumNumberOfSpheres = 100;
         const float worldSize = 50f;
 
-        private static float RandomFloat(Random random, float min, float max)
-        {
-            return (float)random.NextDouble() * (max - min) + min;
-        }
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
@@ -96,18 +91,18 @@ namespace Cannonball
 
                 // Position the sphere in our world
                 sphere.Position = new Vector3(
-                    RandomFloat(random, -worldSize + radius, worldSize - radius),
-                    RandomFloat(random, radius, worldSize - radius),
-                    RandomFloat(random, -worldSize + radius, worldSize - radius));
+                    random.NextFloat(-worldSize + radius, worldSize - radius),
+                    random.NextFloat(radius, worldSize - radius),
+                    random.NextFloat(-worldSize + radius, worldSize - radius));
 
                 // Pick a random color for the sphere
                 sphere.Color = sphereColors[random.Next(sphereColors.Length)];
 
                 // Create a random velocity vector
                 sphere.Velocity = new Vector3(
-                    RandomFloat(random, -10f, 10f),
-                    RandomFloat(random, -10f, 10f),
-                    RandomFloat(random, -10f, 10f));
+                    random.NextFloat(-10f, 10f),
+                    random.NextFloat(-10f, 10f),
+                    random.NextFloat(-10f, 10f));
 
                 // Add the sphere to our array
                 spheres[i] = sphere;
