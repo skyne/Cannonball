@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using Cannonball.Engine.GameObjects;
+using System.Diagnostics;
 #endregion
 
 namespace Cannonball
@@ -31,6 +32,7 @@ namespace Cannonball
         RenderTarget2D sceneTarget;
 
         float cameraAngle = 0;
+        float zoomLevel = 1;
 
         public SphereTestGame()
             : base()
@@ -121,6 +123,9 @@ namespace Cannonball
             // TODO: Unload any non ContentManager content here
         }
 
+        MouseState oldMouseState;
+        MouseState actMouseState;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -133,6 +138,25 @@ namespace Cannonball
 
             // TODO: Add your update logic here
             cameraAngle += 0.001f;
+
+            oldMouseState = actMouseState;
+            actMouseState = Mouse.GetState();
+            var prevZoomLevel = zoomLevel;
+
+            var scrollDir = oldMouseState.ScrollWheelValue.CompareTo(actMouseState.ScrollWheelValue);
+            if (scrollDir < 0)
+            {
+                // closing to focus point
+                if (zoomLevel < 1) zoomLevel -= 0.1f;
+                else zoomLevel -= 0.5f;
+            }
+            else if (scrollDir > 0)
+            {
+                if (zoomLevel < 1) zoomLevel += 0.1f;
+                else zoomLevel += 0.5f;
+            }
+
+            if (zoomLevel <= 0) zoomLevel = prevZoomLevel;
 
             base.Update(gameTime);
         }
@@ -148,7 +172,7 @@ namespace Cannonball
             // TODO: Add your drawing code here
             // Create a view and projection matrix for our camera
             Matrix view = Matrix.CreateLookAt(
-                new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize, (float)(worldSize * Math.Cos(cameraAngle))) * 1.5f
+                new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel
                 , Vector3.Zero
                 , Vector3.Up);
             Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.01f, 100f);
