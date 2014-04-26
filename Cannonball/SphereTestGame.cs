@@ -30,6 +30,8 @@ namespace Cannonball
         Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
 
+        float cameraAngle = 0;
+
         public SphereTestGame()
             : base()
         {
@@ -130,6 +132,7 @@ namespace Cannonball
                 Exit();
 
             // TODO: Add your update logic here
+            cameraAngle += 0.001f;
 
             base.Update(gameTime);
         }
@@ -145,9 +148,10 @@ namespace Cannonball
             // TODO: Add your drawing code here
             // Create a view and projection matrix for our camera
             Matrix view = Matrix.CreateLookAt(
-                new Vector3(worldSize, worldSize, worldSize) * 1.5f, Vector3.Zero, Vector3.Up);
-            Matrix projection = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.01f, 100f);
+                new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize, (float)(worldSize * Math.Cos(cameraAngle))) * 1.5f
+                , Vector3.Zero
+                , Vector3.Up);
+            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.01f, 100f);
 
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
