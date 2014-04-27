@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.MonoContent", "Cannonball.MonoContent\Cannonball.MonoContent\Cannonball.MonoContent.csproj", "{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Cannonball.Content", "Cannonball.MonoContent\Cannonball.MonoContentContent\Cannonball.Content.contentproj", "{2772CF16-2BCA-4D19-8F44-8D934E1910A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Android|Any CPU = Android|Any CPU
+		iOS|Any CPU = iOS|Any CPU
+		Linux|Any CPU = Linux|Any CPU
+		OSX|Any CPU = OSX|Any CPU
+		PSM|Any CPU = PSM|Any CPU
+		Windows|Any CPU = Windows|Any CPU
+		Windows8|Any CPU = Windows8|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Android|Any CPU.ActiveCfg = Android|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Android|Any CPU.Build.0 = Android|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.iOS|Any CPU.ActiveCfg = iOS|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.iOS|Any CPU.Build.0 = iOS|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Linux|Any CPU.ActiveCfg = Linux|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Linux|Any CPU.Build.0 = Linux|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.OSX|Any CPU.ActiveCfg = OSX|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.OSX|Any CPU.Build.0 = OSX|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.PSM|Any CPU.ActiveCfg = PSM|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.PSM|Any CPU.Build.0 = PSM|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Windows|Any CPU.ActiveCfg = Windows|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Windows|Any CPU.Build.0 = Windows|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Windows8|Any CPU.ActiveCfg = Windows8|Any CPU
+		{04C884A2-17EF-4240-9C8D-731CD9A8D0BF}.Windows8|Any CPU.Build.0 = Windows8|Any CPU
+		{2772CF16-2BCA-4D19-8F44-8D934E1910A0}.Android|Any CPU.ActiveCfg = Android|Any CPU
+		{2772CF16-2BCA-4D19-8F44-8D934E1910A0}.iOS|Any CPU.ActiveCfg = iOS|Any CPU
+		{2772CF16-2BCA-4D19-8F44-8D934E1910A0}.Linux|Any CPU.ActiveCfg = Linux|Any CPU
+		{2772CF16-2BCA-4D19-8F44-8D934E1910A0}.OSX|Any CPU.ActiveCfg = OSX|Any CPU
+		{2772CF16-2BCA-4D19-8F44-8D934E1910A0}.PSM|Any CPU.ActiveCfg = PSM|Any CPU
+		{2772CF16-2BCA-4D19-8F44-8D934E1910A0}.Windows|Any CPU.ActiveCfg = Windows|Any CPU
+		{2772CF16-2BCA-4D19-8F44-8D934E1910A0}.Windows8|Any CPU.ActiveCfg = Windows8|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -20,13 +20,15 @@ namespace Cannonball
     public class SphereTestGame : Game
     {
         private const int maximumNumberOfSpheres = 100;
-        const float worldSize = 50f;
+        const float worldSize = 500f;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
+
+        Effect desaturation;
 
         float cameraAngle = 0;
         float zoomLevel = 1;
@@ -47,6 +49,8 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            desaturation = Content.Load<Effect>("Shaders/TextureBlend");
+
             sceneTarget = new RenderTarget2D(GraphicsDevice
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
                 , GraphicsDevice.PresentationParameters.BackBufferHeight
@@ -62,7 +66,7 @@ namespace Cannonball
                     FieldOfView = MathHelper.PiOver4,
                     AspectRatio = GraphicsDevice.Viewport.AspectRatio,
                     NearPlane = 0.01f,
-                    FarPlane = 1000f
+                    FarPlane = 5000f
                 };
 
             base.Initialize();
