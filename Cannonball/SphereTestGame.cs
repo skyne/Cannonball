@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using Cannonball.Engine.GameObjects;
 using System.Diagnostics;
+using Cannonball.Engine.Graphics.Camera;
 #endregion
 
 namespace Cannonball
@@ -25,6 +26,7 @@ namespace Cannonball
         SpriteBatch spriteBatch;
         Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
+        ICamera camera = new PerspectiveCamera();
 
         float cameraAngle = 0;
         float zoomLevel = 1;
@@ -51,6 +53,17 @@ namespace Cannonball
                 , false
                 , GraphicsDevice.PresentationParameters.BackBufferFormat
                 , GraphicsDevice.PresentationParameters.DepthStencilFormat);
+
+            camera = new PerspectiveCamera()
+                {
+                    Position = Vector3.UnitX,
+                    Target = Vector3.Zero,
+                    Up = Vector3.Up,
+                    FieldOfView = MathHelper.PiOver4,
+                    AspectRatio = GraphicsDevice.Viewport.AspectRatio,
+                    NearPlane = 0.01f,
+                    FarPlane = 1000f
+                };
 
             base.Initialize();
         }
@@ -164,18 +177,12 @@ namespace Cannonball
 
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
-            // Create a view and projection matrix for our camera
-            Matrix view = Matrix.CreateLookAt(
-                new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel
-                , Vector3.Zero
-                , Vector3.Up);
-            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.01f, 100f);
+            camera.Position = new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel;
 
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
-                spheres[i].Draw(view, projection);
+                spheres[i].Draw(camera.ViewMatrix, camera.ProjectionMatrix);
             }
 
             GraphicsDevice.SetRenderTarget(null);
