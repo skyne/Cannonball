@@ -19,6 +19,7 @@ namespace Cannonball
         static void Main()
         {
             using (var game = new SphereTestGame())
+            //using (var game = new PlasmaTestGame())
                 game.Run();
         }
     }

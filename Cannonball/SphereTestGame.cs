@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Cannonball.Engine.GameObjects;
 using System.Diagnostics;
 using Cannonball.Engine.Graphics.Camera;
+using Cannonball.Engine.Procedural.Textures;
 #endregion
 
 namespace Cannonball
@@ -27,8 +28,6 @@ namespace Cannonball
         Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
-
-        Effect desaturation;
 
         float cameraAngle = 0;
         float zoomLevel = 1;
@@ -49,7 +48,6 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            desaturation = Content.Load<Effect>("Shaders/TextureBlend");
 
             sceneTarget = new RenderTarget2D(GraphicsDevice
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
