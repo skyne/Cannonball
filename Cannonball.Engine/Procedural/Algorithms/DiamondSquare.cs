@@ -57,7 +57,8 @@ namespace Cannonball.Engine.Procedural.Algorithms
 
     public class DiamondSquare
     {
-        static Dictionary<DiamondSquareSeed, float[]> cache = new Dictionary<DiamondSquareSeed, float[]>();
+        public float MinValue { get; private set; }
+        public float MaxValue { get; private set; }
 
         public float[] Generate()
         {
@@ -77,6 +78,8 @@ namespace Cannonball.Engine.Procedural.Algorithms
         {
             var arraySize = size + 1;
             var array = new float[arraySize * arraySize];
+            var min = 1.0f;
+            var max = 0.0f;
             Random r = new Random(randomSeed);
 
             array.Set(arraySize, 0, 0, leftTop);
@@ -84,55 +87,69 @@ namespace Cannonball.Engine.Procedural.Algorithms
             array.Set(arraySize, 0, size, leftBottom);
             array.Set(arraySize, size, size, rightBottom);
 
-            var actSize = size;
+            var actSide = size;
             var actH = heightVariance;
-            while (actSize >= 2)
+            while (actSide >= 2)
             {
-                int halfSize = (int)(actSize * 0.5f);
+                int halfSide = (int)(actSide * 0.5f);
 
                 // diamond step
-                for (int x = 0; x < size; x += actSize)
+                for (int x = 0; x < size; x += actSide)
                 {
-                    for (int y = 0; y < size; y += actSize)
+                    for (int y = 0; y < size; y += actSide)
                     {
                         var sum = array.Get(arraySize, x, y)
-                            + array.Get(arraySize, x + actSize, y)
-                            + array.Get(arraySize, x, y + actSize)
-                            + array.Get(arraySize, x + actSize, y + actSize);
+                            + array.Get(arraySize, x + actSide, y)
+                            + array.Get(arraySize, x, y + actSide)
+                            + array.Get(arraySize, x + actSide, y + actSide);
 
                         var avg = sum * 0.25f;
 
-                        var value = avg + r.NextFloat() * 2 * actH - actH;
+                        var rnd = r.NextDouble();
 
-                        array.Set(arraySize, x + halfSize, y + halfSize, value);
+                        var displace = rnd * 2.0f * actH - actH;
+
+                        var value = (float)(avg + displace);
+
+                        array.Set(arraySize, x + halfSide, y + halfSide, value);
+                        if (min > value) min = value;
+                        if (max < value) max = value;
                     }
                 }
 
                 // square step
-                for (int x = 0; x < size; x += halfSize)
+                for (int x = 0; x < size; x += halfSide)
                 {
-                    for (int y = (x + halfSize) % actSize; y < size; y += actSize)
+                    for (int y = (x + halfSide) % actSide; y < size; y += actSide)
                     {
-                        var sum = array.Get(arraySize, (x - halfSize + actSize) % actSize, y)
-                            + array.Get(arraySize, (x + halfSize) % actSize, y)
-                            + array.Get(arraySize, x, (y + halfSize) % actSize)
-                            + array.Get(arraySize, x, (y - halfSize + actSize) % actSize);
+                        var sum = array.Get(arraySize, (x - halfSide + actSide) % actSide, y)
+                            + array.Get(arraySize, (x + halfSide) % actSide, y)
+                            + array.Get(arraySize, x, (y + halfSide) % actSide)
+                            + array.Get(arraySize, x, (y - halfSide + actSide) % actSide);
 
                         var avg = sum * 0.25f;
 
-                        var value = avg + r.NextFloat() * 2 * actH - actH;
+                        var rnd = r.NextDouble();
+
+                        var displace = rnd * 2.0f * actH - actH;
+
+                        var value = (float)(avg + displace);
 
                         array.Set(arraySize, x, y, value);
+                        if (min > value) min = value;
+                        if (max < value) max = value;
 
                         if (x == 0) array.Set(arraySize, size, y, avg);
                         if (y == 0) array.Set(arraySize, x, size, avg);
                     }
                 }
 
-                actSize = halfSize;
+                actSide = halfSide;
                 actH = actH * 0.5f;
             }
 
+            MinValue = min;
+            MaxValue = max;
             return array;
         }
     }
