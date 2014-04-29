@@ -38,7 +38,12 @@ namespace Cannonball
             var plasmaGenerator = new PlasmaVariationGenerator(GraphicsDevice, desaturation, VARIATION_COUNT, 0);
             baseTexture = Content.Load<Texture2D>("Textures/BaseTexture");
             plasmaGenerator.SetBaseTexture(baseTexture);
-            plasmaVariations = plasmaGenerator.GenerateTextureArray();
+            //plasmaVariations = plasmaGenerator.GenerateTextureArray();
+            plasmaVariations = new Texture2D[VARIATION_COUNT];
+            for (int i = 0; i < VARIATION_COUNT; i++)
+            {
+                plasmaVariations[i] = new PlasmaTexture(GraphicsDevice, 256);
+            }
 
             base.Initialize();
         }
@@ -66,7 +71,8 @@ namespace Cannonball
 
             int x = 0, y = 0;
             int w = GraphicsDevice.PresentationParameters.BackBufferWidth / baseTexture.Width;
-            foreach (var plasma in plasmaVariations)
+            var plasma = plasmaVariations[0];
+            for (int i = 0; i < VARIATION_COUNT; i++)
             {
                 spriteBatch.Draw(plasma, new Rectangle(256 * x, 256 * y, 256, 256), Color.White);
 

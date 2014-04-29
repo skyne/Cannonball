@@ -48,11 +48,14 @@
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
+    <Compile Include="Procedural\Algorithms\DiamondSquare.cs" />
     <Compile Include="Procedural\Objects\GeometricPrimitive.cs" />
     <Compile Include="Procedural\Objects\SpherePrimitive.cs" />
+    <Compile Include="Procedural\Textures\PlasmaTexture.cs" />
     <Compile Include="Procedural\Textures\PlasmaVariationGenerator.cs" />
     <Compile Include="Procedural\Textures\TextureGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ArrayHelpers.cs" />
     <Compile Include="Utils\RandomizationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
