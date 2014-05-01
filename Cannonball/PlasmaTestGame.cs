@@ -18,6 +18,7 @@ namespace Cannonball
 
         Texture2D baseTexture;
         Texture2D[] plasmaVariations;
+        int selectedPlasma = 0;
         Effect desaturation;
 
         public PlasmaTestGame()
@@ -42,7 +43,7 @@ namespace Cannonball
             plasmaVariations = new Texture2D[VARIATION_COUNT];
             for (int i = 0; i < VARIATION_COUNT; i++)
             {
-                plasmaVariations[i] = new PlasmaTexture(GraphicsDevice, 256);
+                plasmaVariations[i] = new PlasmaTexture(GraphicsDevice, (int)Math.Pow(2, i + 2));
             }
 
             base.Initialize();
@@ -55,10 +56,22 @@ namespace Cannonball
             base.LoadContent();
         }
 
+        KeyboardState newKeys;
+        KeyboardState oldKeys;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            oldKeys = newKeys;
+            newKeys = Keyboard.GetState();
+
+            if (oldKeys.IsKeyDown(Keys.W) && newKeys.IsKeyUp(Keys.W))
+                selectedPlasma++;
+            if (oldKeys.IsKeyDown(Keys.S) && newKeys.IsKeyUp(Keys.S))
+                selectedPlasma--;
+
+            selectedPlasma = Math.Min(Math.Max(selectedPlasma, 0), VARIATION_COUNT - 1);
 
             base.Update(gameTime);
         }
@@ -69,19 +82,12 @@ namespace Cannonball
 
             spriteBatch.Begin();
 
-            int x = 0, y = 0;
-            int w = GraphicsDevice.PresentationParameters.BackBufferWidth / baseTexture.Width;
-            var plasma = plasmaVariations[0];
+            int x = GraphicsDevice.PresentationParameters.BackBufferWidth / 2,
+                y = GraphicsDevice.PresentationParameters.BackBufferHeight / 2;
+            var plasma = plasmaVariations[selectedPlasma];
             for (int i = 0; i < VARIATION_COUNT; i++)
             {
-                spriteBatch.Draw(plasma, new Rectangle(256 * x, 256 * y, 256, 256), Color.White);
-
-                x++;
-                if (x % w == 0)
-                {
-                    x = 0;
-                    y++;
-                }
+                spriteBatch.Draw(plasma, new Rectangle(x - plasma.Width, y - plasma.Height, plasma.Width * 2, plasma.Height * 2), Color.White);
             }
 
             spriteBatch.End();

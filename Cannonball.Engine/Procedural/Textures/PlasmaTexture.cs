@@ -24,8 +24,8 @@ namespace Cannonball.Engine.Procedural.Textures
             {
                 for (int y = 0; y < size; ++y)
                 {
-                    //var value = Math.Min(Math.Max(values.Get(size + 1, x, y), 0.0f), 1.0f);
-                    int value = (int)(((values.Get(size + 1, x, y) - min) / range) * 255);
+                    var value = Math.Min(Math.Max(values.Get(size + 1, x, y), 0.0f), 1.0f);
+                    //int value = (int)(((values.Get(size + 1, x, y) - min) / range) * 255);
                     colorData[y * size + x] = new Color(value, value, value, 1);
                 }
             }

@@ -52,7 +52,7 @@ namespace Cannonball.Engine.Procedural.Algorithms
                 && this.rightBottom == other.rightBottom;
         }
 
-        public static DiamondSquareSeed Empty = new DiamondSquareSeed(64, DateTime.Now.Millisecond, 0.5f, 0.25f);
+        public static DiamondSquareSeed Empty = new DiamondSquareSeed(64, DateTime.Now.Millisecond, 0, 0.25f);
     };
 
     public class DiamondSquare
@@ -91,7 +91,7 @@ namespace Cannonball.Engine.Procedural.Algorithms
             var actH = heightVariance;
             while (actSide >= 2)
             {
-                int halfSide = (int)(actSide * 0.5f);
+                int halfSide = actSide / 2;
 
                 // diamond step
                 for (int x = 0; x < size; x += actSide)
@@ -107,7 +107,7 @@ namespace Cannonball.Engine.Procedural.Algorithms
 
                         var rnd = r.NextDouble();
 
-                        var displace = rnd * 2.0f * actH - actH;
+                        var displace = rnd * actH;
 
                         var value = (float)(avg + displace);
 
@@ -131,7 +131,7 @@ namespace Cannonball.Engine.Procedural.Algorithms
 
                         var rnd = r.NextDouble();
 
-                        var displace = rnd * 2.0f * actH - actH;
+                        var displace = rnd * actH;
 
                         var value = (float)(avg + displace);
 
