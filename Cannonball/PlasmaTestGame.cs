@@ -1,4 +1,5 @@
-﻿using Cannonball.Engine.Procedural.Textures;
+﻿using Cannonball.Engine.Procedural.Algorithms;
+using Cannonball.Engine.Procedural.Textures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,6 +19,7 @@ namespace Cannonball
 
         Texture2D baseTexture;
         Texture2D[] plasmaVariations;
+        Texture2D hillside;
         int selectedPlasma = 0;
         Effect desaturation;
 
@@ -45,6 +47,8 @@ namespace Cannonball
             {
                 plasmaVariations[i] = new PlasmaTexture(GraphicsDevice, (int)Math.Pow(2, i + 2));
             }
+
+            hillside = new PlasmaTexture(GraphicsDevice, new DiamondSquareSeed() { size = 64, heightVariance = 0.25f, leftTop = 0, rightTop = 0.25f, leftBottom = 0.5f, rightBottom = 1.0f, randomSeed = 1 });
 
             base.Initialize();
         }
@@ -85,10 +89,8 @@ namespace Cannonball
             int x = GraphicsDevice.PresentationParameters.BackBufferWidth / 2,
                 y = GraphicsDevice.PresentationParameters.BackBufferHeight / 2;
             var plasma = plasmaVariations[selectedPlasma];
-            for (int i = 0; i < VARIATION_COUNT; i++)
-            {
-                spriteBatch.Draw(plasma, new Rectangle(x - plasma.Width, y - plasma.Height, plasma.Width * 2, plasma.Height * 2), Color.White);
-            }
+            
+            spriteBatch.Draw(plasma, new Rectangle(x - 256, y - 256, 512, 512), Color.White);
 
             spriteBatch.End();
 

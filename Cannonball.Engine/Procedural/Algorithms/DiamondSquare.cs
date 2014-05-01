@@ -52,7 +52,7 @@ namespace Cannonball.Engine.Procedural.Algorithms
                 && this.rightBottom == other.rightBottom;
         }
 
-        public static DiamondSquareSeed Empty = new DiamondSquareSeed(64, DateTime.Now.Millisecond, 0, 0.25f);
+        public static DiamondSquareSeed Empty = new DiamondSquareSeed(64, DateTime.Now.Millisecond, 0.5f, 0.25f);
     };
 
     public class DiamondSquare
@@ -93,54 +93,57 @@ namespace Cannonball.Engine.Procedural.Algorithms
             {
                 int halfSide = actSide / 2;
 
+                /* Half of the code came from: https://github.com/eogas/DiamondSquare
+                 * Other half's source is: http://gamedevwithoutacause.com/?p=684
+                 * 
+                 * Use temporary named variables to simplify equations
+                 * 
+                 * s0 . d0. s1
+                 *  . . . . . 
+                 * d1 . cn. d2
+                 *  . . . . . 
+                 * s2 . d3. s3
+                 * 
+                 * */
+                float s0, s1, s2, s3, d0, d1, d2, d3, cn;
+
                 // diamond step
-                for (int x = 0; x < size; x += actSide)
+                for (int y = 0; y < size; y += actSide)
                 {
-                    for (int y = 0; y < size; y += actSide)
+                    for (int x = 0; x < size; x += actSide)
                     {
-                        var sum = array.Get(arraySize, x, y)
-                            + array.Get(arraySize, x + actSide, y)
-                            + array.Get(arraySize, x, y + actSide)
-                            + array.Get(arraySize, x + actSide, y + actSide);
+                        s0 = array.Get(arraySize, x, y);
+                        s1 = array.Get(arraySize, x + actSide, y);
+                        s2 = array.Get(arraySize, x, y + actSide);
+                        s3 = array.Get(arraySize, x + actSide, y + actSide);
 
-                        var avg = sum * 0.25f;
-
-                        var rnd = r.NextDouble();
-
-                        var displace = rnd * actH;
-
-                        var value = (float)(avg + displace);
-
-                        array.Set(arraySize, x + halfSide, y + halfSide, value);
-                        if (min > value) min = value;
-                        if (max < value) max = value;
+                        // cn
+                        array.Set(arraySize, x + halfSide, y + halfSide, ((s0 + s1 + s2 + s3) / 4.0f) + (float)(r.NextDouble() * actH));
                     }
                 }
 
                 // square step
-                for (int x = 0; x < size; x += halfSide)
+                for (int y = 0; y < size; y += actSide)
                 {
-                    for (int y = (x + halfSide) % actSide; y < size; y += actSide)
+                    for (int x = 0; x < size; x += actSide)
                     {
-                        var sum = array.Get(arraySize, (x - halfSide + actSide) % actSide, y)
-                            + array.Get(arraySize, (x + halfSide) % actSide, y)
-                            + array.Get(arraySize, x, (y + halfSide) % actSide)
-                            + array.Get(arraySize, x, (y - halfSide + actSide) % actSide);
+                        s0 = array.Get(arraySize, x, y);
+                        s1 = array.Get(arraySize, x + actSide, y);
+                        s2 = array.Get(arraySize, x, y + actSide);
+                        s3 = array.Get(arraySize, x + actSide, y + actSide);
+                        cn = array.Get(arraySize, x + halfSide, y + halfSide);
 
-                        var avg = sum * 0.25f;
+                        d0 = y <= 0 ? (s0 + s1 + cn) / 3.0f : (s0 + s1 + cn + array.Get(arraySize, x + (actSide / 2), y - (actSide / 2))) / 4.0f;
+                        d1 = x <= 0 ? (s0 + cn + s2) / 3.0f : (s0 + cn + s2 + array.Get(arraySize, x - (actSide / 2), y + (actSide / 2))) / 4.0f;
+                        d2 = x >= size - actSide ? (s1 + cn + s3) / 3.0f :
+                            (s1 + cn + s3 + array.Get(arraySize, x + actSide + halfSide, y + halfSide)) / 4.0f;
+                        d3 = y >= size - actSide ? (cn + s2 + s3) / 3.0f :
+                            (cn + s2 + s3 + array.Get(arraySize, x + halfSide, y + actSide + halfSide)) / 4.0f;
 
-                        var rnd = r.NextDouble();
-
-                        var displace = rnd * actH;
-
-                        var value = (float)(avg + displace);
-
-                        array.Set(arraySize, x, y, value);
-                        if (min > value) min = value;
-                        if (max < value) max = value;
-
-                        if (x == 0) array.Set(arraySize, size, y, avg);
-                        if (y == 0) array.Set(arraySize, x, size, avg);
+                        array.Set(arraySize, x + halfSide, y, d0 + (float)(r.NextDouble() * actH));
+                        array.Set(arraySize, x, y + halfSide, d1 + (float)(r.NextDouble() * actH));
+                        array.Set(arraySize, x + actSide, y + halfSide, d2 + (float)(r.NextDouble() * actH));
+                        array.Set(arraySize, x + halfSide, y + actSide, d3 + (float)(r.NextDouble() * actH));
                     }
                 }
 
