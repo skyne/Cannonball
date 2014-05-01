@@ -8,25 +8,30 @@ using System.Text;
 
 namespace Cannonball.Engine.GameObjects
 {
-    public class Sphere
+    public class Primitive
     {
-        private SpherePrimitive primitive;
+        private GeometricPrimitive primitive;
 
         public Vector3 Position;
         public Vector3 Velocity;
+        public Vector3 Scale;
         public Color Color = Color.White;
-
-        public float Radius { get; private set; }
 
         public BoundingSphere Bounds
         {
-            get { return new BoundingSphere(Position, Radius); }
+            get { return new BoundingSphere(Position, Scale.X); }
         }
 
-        public Sphere(GraphicsDevice graphics, float radius)
+        public BoundingBox Box
         {
-            primitive = new SpherePrimitive(graphics, radius * 2f, 10);
-            Radius = radius;
+            get { return new BoundingBox(-Scale, Scale); }
+        }
+
+        public Primitive(GraphicsDevice graphics, float radius, bool cube = false)
+        {
+            if (cube) primitive = Primitives.Cube;
+            else primitive = Primitives.Sphere;
+            Scale = new Vector3(radius);
         }
 
         public void Update(GameTime gameTime)
@@ -36,7 +41,8 @@ namespace Cannonball.Engine.GameObjects
 
         public void Draw(Matrix view, Matrix projection)
         {
-            primitive.Draw(Matrix.CreateTranslation(Position), view, projection, Color);
+            primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateTranslation(Position)
+                , view, projection, Color);
         }
     }
 }

@@ -43,13 +43,15 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameObjects\Sphere.cs" />
+    <Compile Include="GameObjects\Primitive.cs" />
     <Compile Include="Graphics\Camera\ICamera.cs" />
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
     <Compile Include="Procedural\Algorithms\DiamondSquare.cs" />
+    <Compile Include="Procedural\Objects\CubePrimitive.cs" />
     <Compile Include="Procedural\Objects\GeometricPrimitive.cs" />
+    <Compile Include="Procedural\Objects\Primitives.cs" />
     <Compile Include="Procedural\Objects\SpherePrimitive.cs" />
     <Compile Include="Procedural\Textures\PlasmaTexture.cs" />
     <Compile Include="Procedural\Textures\PlasmaVariationGenerator.cs" />

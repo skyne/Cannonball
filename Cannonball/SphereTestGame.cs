@@ -11,6 +11,7 @@ using Cannonball.Engine.GameObjects;
 using System.Diagnostics;
 using Cannonball.Engine.Graphics.Camera;
 using Cannonball.Engine.Procedural.Textures;
+using Cannonball.Engine.Procedural.Objects;
 #endregion
 
 namespace Cannonball
@@ -25,11 +26,13 @@ namespace Cannonball
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Sphere[] spheres = new Sphere[maximumNumberOfSpheres];
+        Primitive[] spheres = new Primitive[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
+        Primitive cube;
 
         float cameraAngle = 0;
+        float cameraHeight = 0;
         float zoomLevel = 1;
 
         public SphereTestGame()
@@ -48,6 +51,8 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            Primitives.Initialize(GraphicsDevice);
 
             sceneTarget = new RenderTarget2D(GraphicsDevice
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
@@ -81,6 +86,11 @@ namespace Cannonball
 
             // TODO: use this.Content to load your game content here
             CreateSpheres();
+
+            cube = new Primitive(GraphicsDevice, 10f, true);
+            cube.Position = Vector3.Zero;
+            cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
+            cube.Color = Color.Gray;
         }
 
         private void CreateSpheres()
@@ -102,7 +112,7 @@ namespace Cannonball
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
                 // Create the sphere
-                Sphere sphere = new Sphere(GraphicsDevice, radius);
+                Primitive sphere = new Primitive(GraphicsDevice, radius);
 
                 // Position the sphere in our world
                 sphere.Position = new Vector3(
@@ -157,16 +167,28 @@ namespace Cannonball
             if (scrollDir < 0)
             {
                 // closing to focus point
-                if (zoomLevel < 1) zoomLevel -= 0.1f;
-                else zoomLevel -= 0.5f;
+                if (zoomLevel < 1) zoomLevel -= 0.025f;
+                else zoomLevel -= 0.1f;
             }
             else if (scrollDir > 0)
             {
-                if (zoomLevel < 1) zoomLevel += 0.1f;
-                else zoomLevel += 0.5f;
+                if (zoomLevel < 1) zoomLevel += 0.025f;
+                else zoomLevel += 0.1f;
             }
 
             if (zoomLevel <= 0) zoomLevel = prevZoomLevel;
+
+            if (actMouseState.MiddleButton == ButtonState.Pressed)
+            {
+                var diff = oldMouseState.Position - actMouseState.Position;
+
+                var axis = Vector3.Cross(camera.Target - camera.Position, camera.Up);
+                var transform = Quaternion.CreateFromAxisAngle(axis, MathHelper.ToRadians(diff.Y * 10));
+                camera.Position = Vector3.Transform(camera.Position, transform);
+
+                cameraAngle += MathHelper.ToRadians(diff.X);
+                cameraHeight += diff.Y % 10;
+            }
 
             base.Update(gameTime);
         }
@@ -179,13 +201,16 @@ namespace Cannonball
 
             GraphicsDevice.Clear(Color.Black);
 
-            camera.Position = new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel;
+            //camera.Position = Vector3.Transform(camera.Position, Matrix.CreateFromAxisAngle(camera.Up, 0.002f));
+            camera.Position = new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize + cameraHeight, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel;
 
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
                 spheres[i].Draw(camera.ViewMatrix, camera.ProjectionMatrix);
             }
+
+            cube.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
 
             GraphicsDevice.SetRenderTarget(null);
         }
