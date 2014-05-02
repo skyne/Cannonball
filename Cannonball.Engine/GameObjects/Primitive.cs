@@ -15,6 +15,8 @@ namespace Cannonball.Engine.GameObjects
         public Vector3 Position;
         public Vector3 Velocity;
         public Vector3 Scale;
+        public Vector3 Forward;
+        public Vector3 Up;
         public Color Color = Color.White;
 
         public BoundingSphere Bounds
@@ -32,6 +34,8 @@ namespace Cannonball.Engine.GameObjects
             if (cube) primitive = Primitives.Cube;
             else primitive = Primitives.Sphere;
             Scale = new Vector3(radius);
+            Up = Vector3.Up;
+            Forward = Vector3.Forward;
         }
 
         public void Update(GameTime gameTime)
@@ -41,7 +45,7 @@ namespace Cannonball.Engine.GameObjects
 
         public void Draw(Matrix view, Matrix projection)
         {
-            primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateTranslation(Position)
+            primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateWorld(Position, Forward, Up)
                 , view, projection, Color);
         }
     }

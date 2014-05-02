@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Cannonball.Engine.Graphics.Camera;
 using Cannonball.Engine.Procedural.Textures;
 using Cannonball.Engine.Procedural.Objects;
+using Cannonball.Engine.Inputs;
 #endregion
 
 namespace Cannonball
@@ -34,6 +35,7 @@ namespace Cannonball
         float cameraAngle = 0;
         float cameraHeight = 0;
         float zoomLevel = 1;
+        bool cameraMode = false;
 
         public SphereTestGame()
             : base()
@@ -51,7 +53,6 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             Primitives.Initialize(GraphicsDevice);
 
             sceneTarget = new RenderTarget2D(GraphicsDevice
@@ -71,6 +72,43 @@ namespace Cannonball
                     NearPlane = 0.01f,
                     FarPlane = 5000f
                 };
+
+            InputSystem.Single.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
+            InputSystem.Single.RegisterMouseWheelAction(change =>
+                {
+                    var prevZoomLevel = zoomLevel;
+                    if (change < 0)
+                    {
+                        // closing to focus point
+                        if (zoomLevel < 1) zoomLevel -= 0.025f;
+                        else zoomLevel -= 0.1f;
+                    }
+                    else if (change > 0)
+                    {
+                        if (zoomLevel < 1) zoomLevel += 0.025f;
+                        else zoomLevel += 0.1f;
+                    }
+                    if (zoomLevel <= 0) zoomLevel = prevZoomLevel;
+                });
+            InputSystem.Single.RegisterMouseButtonPressedAction(MouseButtons.MiddleButton, () => cameraMode = true);
+            InputSystem.Single.RegisterMouseButtonReleasedAction(MouseButtons.MiddleButton, () => cameraMode = false);
+            InputSystem.Single.RegisterMouseMoveAction((x, y) =>
+                {
+                    if (cameraMode)
+                    {
+                        var axis = Vector3.Cross(camera.Target - camera.Position, camera.Up);
+                        var transform = Quaternion.CreateFromAxisAngle(axis, MathHelper.ToRadians(y * 10));
+                        camera.Position = Vector3.Transform(camera.Position, transform);
+
+                        cameraAngle += MathHelper.ToRadians(x);
+                        cameraHeight += y % 10;
+                    }
+                    else
+                    {
+                        var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(x), MathHelper.ToRadians(y), 0);
+                        cube.Forward = Vector3.Transform(cube.Forward, transform);
+                    }
+                });
 
             base.Initialize();
         }
@@ -153,42 +191,10 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            InputSystem.Single.Update();
 
             // TODO: Add your update logic here
             cameraAngle += 0.001f;
-
-            oldMouseState = actMouseState;
-            actMouseState = Mouse.GetState();
-            var prevZoomLevel = zoomLevel;
-
-            var scrollDir = oldMouseState.ScrollWheelValue.CompareTo(actMouseState.ScrollWheelValue);
-            if (scrollDir < 0)
-            {
-                // closing to focus point
-                if (zoomLevel < 1) zoomLevel -= 0.025f;
-                else zoomLevel -= 0.1f;
-            }
-            else if (scrollDir > 0)
-            {
-                if (zoomLevel < 1) zoomLevel += 0.025f;
-                else zoomLevel += 0.1f;
-            }
-
-            if (zoomLevel <= 0) zoomLevel = prevZoomLevel;
-
-            if (actMouseState.MiddleButton == ButtonState.Pressed)
-            {
-                var diff = oldMouseState.Position - actMouseState.Position;
-
-                var axis = Vector3.Cross(camera.Target - camera.Position, camera.Up);
-                var transform = Quaternion.CreateFromAxisAngle(axis, MathHelper.ToRadians(diff.Y * 10));
-                camera.Position = Vector3.Transform(camera.Position, transform);
-
-                cameraAngle += MathHelper.ToRadians(diff.X);
-                cameraHeight += diff.Y % 10;
-            }
 
             base.Update(gameTime);
         }
