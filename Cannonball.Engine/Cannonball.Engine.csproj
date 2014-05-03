@@ -43,11 +43,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Configuration\GameConfig.cs" />
     <Compile Include="GameObjects\Primitive.cs" />
     <Compile Include="Graphics\Camera\ICamera.cs" />
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
+    <Compile Include="Configuration\InputConfig.cs" />
     <Compile Include="Inputs\InputSystem.cs" />
     <Compile Include="Inputs\MouseButtons.cs" />
     <Compile Include="Procedural\Algorithms\DiamondSquare.cs" />

@@ -37,6 +37,9 @@
     <MonoGamePlatform>PSM</MonoGamePlatform>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cannonball.Engine">
+      <HintPath>..\..\..\Cannonball.Engine\bin\Windows\Debug\Cannonball.Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.FBXImporter" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.TextureImporter" />

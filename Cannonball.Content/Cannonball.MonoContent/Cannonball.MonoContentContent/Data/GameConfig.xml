@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<XnaContent>
+  <Asset Type="Cannonball.Engine.Configuration.GameConfig[]">
+    <GameConfig UserName="Everyone">
+      <Input>
+        <Events>
+          <Event Name="YawLeft">
+            <KeyboardTrigger Key="Q" Type="Hold" />
+            <MouseTrigger Axis="X" Type="NegativeChange" />
+          </Event>
+          <Event Name="YawRight">
+            <KeyboardTrigger Key="E" Type="Hold" />
+            <MouseTrigger Axis="X" Type="PositiveChange" />
+          </Event>
+          <Event Name="PitchDown">
+            <KeyboardTrigger Key="W" Type="Hold" />
+            <MouseTrigger Axis="Y" Type="NegativeChange" />
+          </Event>
+          <Event Name="PitchUp">
+            <KeyboardTrigger Key="S" Type="Hold" />
+            <MouseTrigger Axis="Y" Type="PositiveChange" />
+          </Event>
+          <Event Name="RollLeft">
+            <KeyboardTrigger Key="A" Type="Hold" />
+          </Event>
+          <Event Name="RollRight">
+            <KeyboardTrigger Key="D" Type="Hold" />
+          </Event>
+    
+          <Event Name="Accelerate">
+            <KeyboardTrigger Key="Up" Type="Hold" />
+            <MouseTrigger Button="Left" Type="Hold" />
+          </Event>
+          <Event Name="Decelerate">
+            <KeyboardTrigger Key="Down" Type="Hold" />
+            <MouseTrigger Button="Right" Type="Hold" />
+          </Event>
+    
+          <Event Name="StrafeLeft">
+            <KeyboardTrigger Key="Left" Type="Hold" />
+          </Event>
+          <Event Name="StrafeRight">
+            <KeyboardTrigger Key="Right" Type="Hold" />
+          </Event>
+    
+          <Event Name="FullStop">
+            <KeyboardTrigger Key="NumPad5" Type="Release" />
+            <KeyboardTrigger Key="T" Type="Release" />
+          </Event>
+        </Events>
+      </Input>
+    </GameConfig>
+  </Asset>
+</XnaContent>

@@ -279,5 +279,37 @@ namespace Cannonball.Engine.Inputs
         {
             _mouseMoveActions.Add(action);
         }
+
+        #region Events
+        public event EventHandler<InputEventArgs> InputEvent;
+
+        internal readonly Dictionary<string, List<InputTrigger>> _events = new Dictionary<string, List<InputTrigger>>();
+
+        public void RegisterEvent(string eventName, params InputTrigger[] triggers)
+        {
+            List<InputTrigger> list;
+            if (!_events.TryGetValue(eventName, out list))
+            {
+                list = new List<InputTrigger>();
+                _events.Add(eventName, list);
+            }
+
+            list.AddRange(triggers);
+        }
+
+        private void RaiseEvents()
+        {
+            if (InputEvent != null)
+            {
+                foreach (var _event in _events)
+                {
+                    foreach (var trigger in _event.Value)
+                    {
+
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }
