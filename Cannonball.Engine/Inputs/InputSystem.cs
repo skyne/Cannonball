@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Cannonball.Engine.Inputs
 {
-    public class InputSystem
+    public class InputSystem : GameComponent
     {
-        public static readonly InputSystem Single = new InputSystem();
+        public static readonly InputSystem Single;
 
         public KeyboardState CurrentKeyboardState { get; private set; }
         public KeyboardState LastKeyboardState { get; private set; }
@@ -20,12 +20,13 @@ namespace Cannonball.Engine.Inputs
 
         // TODO: add gamepad management
 
-        public InputSystem()
+        public InputSystem(Game game)
+            : base(game)
         {
 
         }
 
-        public void Update()
+        public override void Update(GameTime gameTime)
         {
             LastKeyboardState = CurrentKeyboardState;
             CurrentKeyboardState = Keyboard.GetState();
@@ -41,6 +42,13 @@ namespace Cannonball.Engine.Inputs
             if (LastMouseState != CurrentMouseState)
             {
                 ExecuteMouseActions();
+            }
+
+            if (this.Game.IsActive)
+            {
+                Mouse.SetPosition(Game.Window.ClientBounds.Center.X, Game.Window.ClientBounds.Center.Y);
+
+                CurrentMouseState = Mouse.GetState();
             }
         }
 

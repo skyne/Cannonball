@@ -30,6 +30,7 @@ namespace Cannonball
         Primitive[] spheres = new Primitive[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
+        InputSystem inputSystem;
         Primitive cube;
 
         float cameraAngle = 0;
@@ -73,8 +74,9 @@ namespace Cannonball
                     FarPlane = 5000f
                 };
 
-            InputSystem.Single.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
-            InputSystem.Single.RegisterMouseWheelAction(change =>
+            inputSystem = new InputSystem(this);
+            inputSystem.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
+            inputSystem.RegisterMouseWheelAction(change =>
                 {
                     var prevZoomLevel = zoomLevel;
                     if (change < 0)
@@ -90,9 +92,9 @@ namespace Cannonball
                     }
                     if (zoomLevel <= 0) zoomLevel = prevZoomLevel;
                 });
-            InputSystem.Single.RegisterMouseButtonPressedAction(MouseButtons.MiddleButton, () => cameraMode = true);
-            InputSystem.Single.RegisterMouseButtonReleasedAction(MouseButtons.MiddleButton, () => cameraMode = false);
-            InputSystem.Single.RegisterMouseMoveAction((x, y) =>
+            inputSystem.RegisterMouseButtonPressedAction(MouseButtons.MiddleButton, () => cameraMode = true);
+            inputSystem.RegisterMouseButtonReleasedAction(MouseButtons.MiddleButton, () => cameraMode = false);
+            inputSystem.RegisterMouseMoveAction((x, y) =>
                 {
                     if (cameraMode)
                     {
@@ -105,9 +107,17 @@ namespace Cannonball
                     }
                     else
                     {
-                        var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(x), MathHelper.ToRadians(y), 0);
+                        var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)x / 10), MathHelper.ToRadians((float)y / 10), 0);
                         cube.Forward = Vector3.Transform(cube.Forward, transform);
                     }
+                });
+            inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
+                {
+                    cube.Velocity += cube.Forward;
+                });
+            inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
+                {
+                    cube.Velocity -= cube.Forward;
                 });
 
             base.Initialize();
@@ -181,9 +191,6 @@ namespace Cannonball
             // TODO: Unload any non ContentManager content here
         }
 
-        MouseState oldMouseState;
-        MouseState actMouseState;
-
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -191,10 +198,12 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            InputSystem.Single.Update();
+            inputSystem.Update(gameTime);
+
+            cube.Update(gameTime);
 
             // TODO: Add your update logic here
-            cameraAngle += 0.001f;
+            //cameraAngle += 0.001f;
 
             base.Update(gameTime);
         }
@@ -208,7 +217,8 @@ namespace Cannonball
             GraphicsDevice.Clear(Color.Black);
 
             //camera.Position = Vector3.Transform(camera.Position, Matrix.CreateFromAxisAngle(camera.Up, 0.002f));
-            camera.Position = new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize + cameraHeight, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel;
+            camera.Position = (new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize + cameraHeight, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel) + cube.Position;
+            camera.Target = cube.Position;
 
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
