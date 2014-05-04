@@ -31,8 +31,8 @@ namespace Cannonball.Engine.Procedural.Algorithms.LSystems
     {
         public CantorDust()
         {
-            RegisterRule('a', () => "aba");
-            RegisterRule('b', () => "bbb");
+            RegisterRule('a', () => "ama");
+            RegisterRule('m', () => "mmm");
 
             DefaultAxiom = "a";
         }
@@ -42,9 +42,9 @@ namespace Cannonball.Engine.Procedural.Algorithms.LSystems
     {
         public KochCurve()
         {
-            RegisterRule('F', () => "F+F-F-F+F");
+            RegisterRule('a', () => "a+a-a-a+a");
 
-            DefaultAxiom = "F";
+            DefaultAxiom = "a";
         }
     }
 
@@ -52,10 +52,10 @@ namespace Cannonball.Engine.Procedural.Algorithms.LSystems
     {
         public SierpinskiTriangle()
         {
-            RegisterRule('A', () => "B-A-B");
-            RegisterRule('B', () => "A+B+A");
+            RegisterRule('a', () => "b-a-b");
+            RegisterRule('b', () => "a+b+a");
 
-            DefaultAxiom = "A";
+            DefaultAxiom = "a";
         }
     }
 
@@ -63,10 +63,10 @@ namespace Cannonball.Engine.Procedural.Algorithms.LSystems
     {
         public SierpinskiTriangleB()
         {
-            RegisterRule('F', () => "F-G+F+G-F");
-            RegisterRule('G', () => "GG");
+            RegisterRule('a', () => "a-b+a+b-a");
+            RegisterRule('b', () => "bb");
 
-            DefaultAxiom = "F-G-G";
+            DefaultAxiom = "a-b-b";
         }
     }
 
@@ -74,10 +74,10 @@ namespace Cannonball.Engine.Procedural.Algorithms.LSystems
     {
         public DragonCurve()
         {
-            RegisterRule('X', () => "X+FY");
-            RegisterRule('Y', () => "FX-Y");
+            RegisterRule('X', () => "X+aY");
+            RegisterRule('Y', () => "aX-Y");
 
-            DefaultAxiom = "FX";
+            DefaultAxiom = "aX";
         }
     }
 
@@ -85,10 +85,10 @@ namespace Cannonball.Engine.Procedural.Algorithms.LSystems
     {
         public FractalPlant()
         {
-            RegisterRule('X', () => "F-[[X]+X]+F[+FX]-X");
-            RegisterRule('F', () => "FF");
+            RegisterRule('X', () => "a-[[X]+X]+a[+aX]-X");
+            RegisterRule('a', () => "aa");
 
-            DefaultAxiom = "F";
+            DefaultAxiom = "X";
         }
     }
 }
