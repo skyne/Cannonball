@@ -33,7 +33,6 @@ namespace Cannonball
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
         InputSystem inputSystem;
-        LSystem lSystem;
         Primitive cube;
 
         float cameraAngle = 0;
@@ -57,9 +56,6 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            lSystem = new AlgaeSystem();
-            lSystem.Get("a", 11, 0);
-
             Primitives.Initialize(GraphicsDevice);
 
             sceneTarget = new RenderTarget2D(GraphicsDevice

@@ -68,9 +68,9 @@ namespace Cannonball.Engine.Procedural.Algorithms
             return retVal;
         }
 
-        public virtual void Get(int level, int seed)
+        public virtual string Get(int level, int seed)
         {
-            Get(DefaultAxiom, level, seed);
+            return Get(DefaultAxiom, level, seed);
         }
     }
 }
