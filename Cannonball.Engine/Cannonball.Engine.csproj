@@ -50,7 +50,9 @@
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
     <Compile Include="Inputs\InputSystem.cs" />
     <Compile Include="Inputs\MouseButtons.cs" />
+    <Compile Include="Procedural\Algorithms\ConcreteLSystems.cs" />
     <Compile Include="Procedural\Algorithms\DiamondSquare.cs" />
+    <Compile Include="Procedural\Algorithms\LSystem.cs" />
     <Compile Include="Procedural\Objects\CubePrimitive.cs" />
     <Compile Include="Procedural\Objects\GeometricPrimitive.cs" />
     <Compile Include="Procedural\Objects\Primitives.cs" />

@@ -13,6 +13,8 @@ using Cannonball.Engine.Graphics.Camera;
 using Cannonball.Engine.Procedural.Textures;
 using Cannonball.Engine.Procedural.Objects;
 using Cannonball.Engine.Inputs;
+using Cannonball.Engine.Procedural.Algorithms;
+using Cannonball.Engine.Procedural.Algorithms.LSystems;
 #endregion
 
 namespace Cannonball
@@ -31,6 +33,7 @@ namespace Cannonball
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
         InputSystem inputSystem;
+        LSystem lSystem;
         Primitive cube;
 
         float cameraAngle = 0;
@@ -54,6 +57,9 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            lSystem = new AlgaeSystem();
+            lSystem.Get("a", 11, 0);
+
             Primitives.Initialize(GraphicsDevice);
 
             sceneTarget = new RenderTarget2D(GraphicsDevice
