@@ -50,7 +50,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
+    <Compile Include="LightningTestGame.cs" />
     <Compile Include="LSystemTestGame.cs" />
     <Compile Include="PlasmaTestGame.cs" />
     <Compile Include="Program.cs" />

@@ -20,7 +20,8 @@ namespace Cannonball
         {
             //using (var game = new SphereTestGame())
             //using (var game = new PlasmaTestGame())
-            using (var game = new LSystemTestGame())
+            //using (var game = new LSystemTestGame())
+            using (var game = new LightningTestGame())
                 game.Run();
         }
     }

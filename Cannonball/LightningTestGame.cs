@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -7,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using Cannonball.Engine.Procedural.Effects;
 #endregion
 
 namespace Cannonball
@@ -14,13 +16,17 @@ namespace Cannonball
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class LightningTestGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Texture2D _lineBase;
 
+        Lightning lightning;
+        IEnumerable<Vector2> lightningPoints;
+        IEnumerable<Tuple<Vector2, Vector2>> lightningSegments;
 
-        public Game1()
+        public LightningTestGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -35,7 +41,14 @@ namespace Cannonball
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 512;
+            graphics.PreferredBackBufferHeight = 512;
+            graphics.ApplyChanges();
+
+            lightning = new Lightning();
+            lightningPoints = lightning.Get(Vector2.One * 12, Vector2.One * 500, 140, 5, 1);
+            lightningSegments = lightning.GetForked(Vector2.One * 12, Vector2.One * 500, 140, MathHelper.ToRadians(10), 0.7f, 5, 1);
 
             base.Initialize();
         }
@@ -48,7 +61,8 @@ namespace Cannonball
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            _lineBase = new Texture2D(GraphicsDevice, 1, 1);
+            _lineBase.SetData(new Color[] { Color.White });
             // TODO: use this.Content to load your game content here
         }
 
@@ -82,11 +96,33 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            //var prev = lightningPoints.First();
+            //foreach (var point in lightningPoints.Skip(1))
+            //{
+            //    DrawLine(prev, point, Color.White);
+            //    prev = point;
+            //}
+
+            foreach (var segment in lightningSegments)
+            {
+                DrawLine(segment.Item1, segment.Item2, Color.White);
+            }
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void DrawLine(Vector2 start, Vector2 end, Color color)
+        {
+            float length = (end - start).Length();
+            float rotation = (float)Math.Atan2(end.Y - start.Y, end.X - start.X);
+            spriteBatch.Draw(_lineBase, start, null, color, rotation, Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
     }
 }
