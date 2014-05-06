@@ -44,6 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GameObjects\Primitive.cs" />
+    <Compile Include="Graphics\Drawings\SpriteBatchHelpers.cs" />
     <Compile Include="Graphics\Camera\ICamera.cs" />
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />

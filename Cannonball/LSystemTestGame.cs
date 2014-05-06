@@ -33,6 +33,8 @@ namespace Cannonball
 
         protected override void Initialize()
         {
+            SpriteBatchHelpers.Initialize(this.GraphicsDevice);
+
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 512;
             graphics.PreferredBackBufferHeight = 512;

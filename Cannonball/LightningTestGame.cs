@@ -20,7 +20,6 @@ namespace Cannonball
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Texture2D _lineBase;
 
         Lightning lightning;
         IEnumerable<Vector2> lightningPoints;
@@ -41,6 +40,8 @@ namespace Cannonball
         /// </summary>
         protected override void Initialize()
         {
+            SpriteBatchHelpers.Initialize(this.GraphicsDevice);
+
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 512;
             graphics.PreferredBackBufferHeight = 512;
@@ -61,8 +62,6 @@ namespace Cannonball
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            _lineBase = new Texture2D(GraphicsDevice, 1, 1);
-            _lineBase.SetData(new Color[] { Color.White });
             // TODO: use this.Content to load your game content here
         }
 
@@ -110,19 +109,12 @@ namespace Cannonball
 
             foreach (var segment in lightningSegments)
             {
-                DrawLine(segment.Item1, segment.Item2, Color.White);
+                spriteBatch.DrawLine(segment.Item1, segment.Item2, Color.White);
             }
 
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        public void DrawLine(Vector2 start, Vector2 end, Color color)
-        {
-            float length = (end - start).Length();
-            float rotation = (float)Math.Atan2(end.Y - start.Y, end.X - start.X);
-            spriteBatch.Draw(_lineBase, start, null, color, rotation, Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
     }
 }
