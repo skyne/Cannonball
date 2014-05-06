@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using Cannonball.Engine.Procedural.Effects;
+using Cannonball.Engine.Inputs;
 #endregion
 
 namespace Cannonball
@@ -20,10 +21,11 @@ namespace Cannonball
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        InputSystem inputSystem;
 
-        Lightning lightning;
-        IEnumerable<Vector2> lightningPoints;
-        IEnumerable<Tuple<Vector2, Vector2>> lightningSegments;
+        //IEnumerable<Vector2> lightningPoints;
+        //IEnumerable<LightningSegment> lightningSegments;
+        AnimatedLightning anim;
 
         public LightningTestGame()
             : base()
@@ -40,16 +42,24 @@ namespace Cannonball
         /// </summary>
         protected override void Initialize()
         {
-            SpriteBatchHelpers.Initialize(this.GraphicsDevice);
-
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 512;
             graphics.PreferredBackBufferHeight = 512;
             graphics.ApplyChanges();
 
-            lightning = new Lightning();
-            lightningPoints = lightning.Get(Vector2.One * 12, Vector2.One * 500, 140, 5, 1);
-            lightningSegments = lightning.GetForked(Vector2.One * 12, Vector2.One * 500, 140, MathHelper.ToRadians(10), 0.7f, 5, 1);
+            SpriteBatchHelpers.Initialize(this.GraphicsDevice);
+            inputSystem = new InputSystem(this);
+
+            anim = new AnimatedLightning(this, Vector2.One * 12, Vector2.One * 500, 45, MathHelper.ToRadians(45), 0.7f, 5, 1, 10);
+
+            //lightningPoints = LightningGenerator.Get(Vector2.One * 12, Vector2.One * 500, 140, 5, 1);
+            //lightningSegments = LightningGenerator.GetForked(Vector2.One * 12, Vector2.One * 500, 45, MathHelper.ToRadians(45), 0.7f, 5, 1);
+
+            inputSystem.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
+            inputSystem.RegisterMouseMoveAction((x, y) =>
+                {
+                    anim.End += new Vector2(x, y);
+                });
 
             base.Initialize();
         }
@@ -81,10 +91,10 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            inputSystem.Update(gameTime);
 
             // TODO: Add your update logic here
+            anim.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -107,9 +117,14 @@ namespace Cannonball
             //    prev = point;
             //}
 
-            foreach (var segment in lightningSegments)
+            //foreach (var segment in lightningSegments)
+            //{
+            //    spriteBatch.DrawLine(segment.From, segment.To, Color.White);
+            //}
+
+            foreach (var segment in anim.Segments)
             {
-                spriteBatch.DrawLine(segment.Item1, segment.Item2, Color.White);
+                spriteBatch.DrawLine(segment.From, segment.To, segment.Color);
             }
 
             spriteBatch.End();

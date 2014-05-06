@@ -161,7 +161,7 @@ namespace Cannonball.Engine.Inputs
                 if (IsMouseButtonHeldDown(action.Key)) ExecuteActions(action.Value);
             }
 
-            var horizontalMovement = LastMouseState.X - CurrentMouseState.X;
+            var horizontalMovement = CurrentMouseState.X - LastMouseState.X;
             if (horizontalMovement != 0)
             {
                 foreach (var action in _mouseHorizontalMoveActions)
@@ -170,7 +170,7 @@ namespace Cannonball.Engine.Inputs
                 }
             }
 
-            var verticalMovement = LastMouseState.Y - CurrentMouseState.Y;
+            var verticalMovement = CurrentMouseState.Y - LastMouseState.Y;
             if (verticalMovement != 0)
             {
                 foreach (var action in _mouseVerticalMoveActions)
