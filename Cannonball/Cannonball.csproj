@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -26,9 +26,11 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -36,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -45,6 +48,7 @@
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>
@@ -56,11 +60,35 @@
     <Compile Include="PlasmaTestGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SphereTestGame.cs" />
+    <Compile Include="SphereTest\GameObject.cs" />
+    <Compile Include="SphereTest\SphereTestGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="DFPluginAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DfPluginApi.1.0.0\lib\net45\DFPluginAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="DFPluginFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DfPluginFramework.1.0.0\lib\net45\DFPluginFramework.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="NotifyPropertyChanged">
+      <HintPath>..\lib\Afterthought\NotifyPropertyChanged.dll</HintPath>
+    </Reference>
+    <Reference Include="SCP.Common, Version=1.62.163.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SCP.Productivity, Version=1.62.163.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Productivity.dll</HintPath>
+    </Reference>
+    <Reference Include="SCP.Shared, Version=1.62.163.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Shared.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -77,6 +105,10 @@
     <ProjectReference Include="..\Cannonball.Engine\Cannonball.Engine.csproj">
       <Project>{483274a5-69f7-4444-b8bc-8c2723d5fefc}</Project>
       <Name>Cannonball.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MemberValueWatcherDFPlugin\PropertyValueWatcher.csproj">
+      <Project>{4bb8555c-a20d-4745-881e-40fdf6b45950}</Project>
+      <Name>PropertyValueWatcher</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +138,14 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(SolutionDir)lib\Afterthought\Afterthought.Amender.exe "$(TargetPath)" "$(SolutionDir)lib\Afterthought\NotifyPropertyChanged.dll"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

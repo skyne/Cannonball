@@ -1,6 +1,7 @@
 ﻿using Cannonball.Engine.Inputs;
 using Cannonball.Engine.Procedural.Algorithms;
 using Cannonball.Engine.Procedural.Algorithms.LSystems;
+using DFPluginFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,6 +14,7 @@ namespace Cannonball
 {
     class LSystemTestGame : Game
     {
+        PluginManager pluginManager;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         InputSystem inputSystem;
@@ -27,12 +29,16 @@ namespace Cannonball
         public LSystemTestGame()
             : base()
         {
+            
+            
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
+            
+
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 512;
             graphics.PreferredBackBufferHeight = 512;
