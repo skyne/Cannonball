@@ -44,11 +44,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GameObjects\Primitive.cs" />
+    <Compile Include="Graphics\Billboard.cs" />
     <Compile Include="Graphics\Drawings\SpriteBatchHelpers.cs" />
     <Compile Include="Graphics\Camera\ICamera.cs" />
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
+    <Compile Include="Graphics\VertexTypes\VertexPositionTexture.cs" />
     <Compile Include="Inputs\InputSystem.cs" />
     <Compile Include="Inputs\MouseButtons.cs" />
     <Compile Include="Procedural\Algorithms\ConcreteLSystems.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Procedural\Effects\LightningGenerator.cs" />
     <Compile Include="Procedural\Objects\CubePrimitive.cs" />
     <Compile Include="Procedural\Objects\GeometricPrimitive.cs" />
+    <Compile Include="Procedural\Objects\PlanePrimitive.cs" />
     <Compile Include="Procedural\Objects\Primitives.cs" />
     <Compile Include="Procedural\Objects\SpherePrimitive.cs" />
     <Compile Include="Procedural\Textures\LightningTexture.cs" />
