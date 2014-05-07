@@ -23,13 +23,15 @@ namespace Cannonball.Engine.Graphics
             vertices[4] = new VertexPositionTexture(Vector3.One, Vector2.One);
             vertices[5] = new VertexPositionTexture(Vector3.UnitY, Vector2.UnitY);
 
-            billboardVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, vertices.Length, BufferUsage.WriteOnly);
+            billboardVertexBuffer = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, vertices.Length, BufferUsage.None);
             billboardVertexBuffer.SetData(vertices);
             billboardEffect = effect;
         }
 
-        public static void Draw(this GraphicsDevice device, Matrix world, Texture2D texture, ICamera camera)
+        public static void DrawPlane(this GraphicsDevice device, Matrix world, Texture2D texture, ICamera camera)
         {
+            device.SetVertexBuffer(billboardVertexBuffer);
+
             billboardEffect.Parameters["World"].SetValue(world);
             billboardEffect.Parameters["View"].SetValue(camera.ViewMatrix);
             billboardEffect.Parameters["Projection"].SetValue(camera.ProjectionMatrix);
@@ -44,8 +46,10 @@ namespace Cannonball.Engine.Graphics
             }
         }
 
-        public static void Draw(this GraphicsDevice device, Matrix[] instances, Texture2D texture, ICamera camera)
+        public static void DrawPlane(this GraphicsDevice device, Matrix[] instances, Texture2D texture, ICamera camera)
         {
+            device.SetVertexBuffer(billboardVertexBuffer);
+
             billboardEffect.Parameters["View"].SetValue(camera.ViewMatrix);
             billboardEffect.Parameters["Projection"].SetValue(camera.ProjectionMatrix);
             billboardEffect.Parameters["CameraPosition"].SetValue(camera.Position);

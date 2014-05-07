@@ -98,7 +98,7 @@ namespace Cannonball.Engine.Procedural.Effects
         }
     }
 
-    public class AnimatedLightning : GameComponent
+    public class AnimatedLightning
     {
         private List<LightningSegment> _bolt1;
         private List<LightningSegment> _bolt2;
@@ -134,10 +134,9 @@ namespace Cannonball.Engine.Procedural.Effects
         private int _frameDiff;
         private int _actFrame = 0;
 
-        public AnimatedLightning(Game game, Vector2 start, Vector2 end
+        public AnimatedLightning(Vector2 start, Vector2 end
             , float maxOffset, float maxAngleOffset, float lengthScale
             , int level, int seed, int frameDiff)
-            : base(game)
         {
             _seed = seed;
             rand = new Random(seed);
@@ -156,7 +155,7 @@ namespace Cannonball.Engine.Procedural.Effects
             LightningGenerator.GenerateForked(_bolt1, _maxOffset, _maxAngleOffset, _lengthScale, _level, rand);
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             _actFrame++;
 
@@ -176,8 +175,6 @@ namespace Cannonball.Engine.Procedural.Effects
                 _bolt1.Add(new LightningSegment(_start, _end));
                 LightningGenerator.GenerateForked(_bolt1, _maxOffset, _maxAngleOffset, _lengthScale, _level, rand);
             }
-
-            base.Update(gameTime);
         }
     }
 }

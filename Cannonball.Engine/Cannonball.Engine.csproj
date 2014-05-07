@@ -50,7 +50,6 @@
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
-    <Compile Include="Graphics\VertexTypes\VertexPositionTexture.cs" />
     <Compile Include="Inputs\InputSystem.cs" />
     <Compile Include="Inputs\MouseButtons.cs" />
     <Compile Include="Procedural\Algorithms\ConcreteLSystems.cs" />

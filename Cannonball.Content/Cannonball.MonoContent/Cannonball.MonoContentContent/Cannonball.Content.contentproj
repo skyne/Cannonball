@@ -48,8 +48,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Shaders\Effect1.fx">
-      <Name>Effect1</Name>
+    <Compile Include="Shaders\Billboarding.fx">
+      <Name>Billboarding</Name>
       <Importer>EffectImporter</Importer>
       <Processor>MGEffectProcessor</Processor>
     </Compile>

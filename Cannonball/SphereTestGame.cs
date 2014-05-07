@@ -15,6 +15,8 @@ using Cannonball.Engine.Procedural.Objects;
 using Cannonball.Engine.Inputs;
 using Cannonball.Engine.Procedural.Algorithms;
 using Cannonball.Engine.Procedural.Algorithms.LSystems;
+using Cannonball.Engine.Procedural.Effects;
+using Cannonball.Engine.Graphics;
 #endregion
 
 namespace Cannonball
@@ -29,6 +31,8 @@ namespace Cannonball
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D lightningTexture;
+
         Primitive[] spheres = new Primitive[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
@@ -133,6 +137,8 @@ namespace Cannonball
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatchHelpers.Initialize(this.GraphicsDevice);
+            Billboard.Initialize(this.GraphicsDevice, Content.Load<Effect>("Shaders/Billboarding"));
 
             // TODO: use this.Content to load your game content here
             CreateSpheres();
@@ -141,6 +147,21 @@ namespace Cannonball
             cube.Position = Vector3.Zero;
             cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
             cube.Color = Color.Gray;
+
+            var segments = LightningGenerator.GetForked(Vector2.UnitX * 25, new Vector2(25, 100), 45, MathHelper.ToRadians(45), 0.7f, 5, 1);
+            var target = new RenderTarget2D(GraphicsDevice, 50, 100, false
+                , GraphicsDevice.PresentationParameters.BackBufferFormat
+                , GraphicsDevice.PresentationParameters.DepthStencilFormat);
+            var oldTargets = GraphicsDevice.GetRenderTargets();
+            GraphicsDevice.SetRenderTarget(target);
+            spriteBatch.Begin();
+            foreach (var segment in segments)
+            {
+                spriteBatch.DrawLine(segment.From, segment.To, segment.Color);
+            }
+            spriteBatch.End();
+            GraphicsDevice.SetRenderTargets(oldTargets);
+            lightningTexture = target;
         }
 
         private void CreateSpheres()
@@ -226,6 +247,9 @@ namespace Cannonball
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
                 spheres[i].Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+                var forward = camera.Position - spheres[i].Position;
+                forward.Normalize();
+                GraphicsDevice.DrawPlane(Matrix.CreateScale(2) * Matrix.CreateWorld(spheres[i].Position, forward, Vector3.Up), lightningTexture, camera);
             }
 
             cube.Draw(camera.ViewMatrix, camera.ProjectionMatrix);

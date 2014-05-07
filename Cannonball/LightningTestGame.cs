@@ -50,7 +50,7 @@ namespace Cannonball
             SpriteBatchHelpers.Initialize(this.GraphicsDevice);
             inputSystem = new InputSystem(this);
 
-            anim = new AnimatedLightning(this, Vector2.One * 12, Vector2.One * 500, 45, MathHelper.ToRadians(45), 0.7f, 5, 1, 10);
+            anim = new AnimatedLightning(Vector2.One * 12, Vector2.One * 500, 45, MathHelper.ToRadians(45), 0.7f, 5, 1, 10);
 
             //lightningPoints = LightningGenerator.Get(Vector2.One * 12, Vector2.One * 500, 140, 5, 1);
             //lightningSegments = LightningGenerator.GetForked(Vector2.One * 12, Vector2.One * 500, 45, MathHelper.ToRadians(45), 0.7f, 5, 1);
