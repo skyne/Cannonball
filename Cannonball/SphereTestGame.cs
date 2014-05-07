@@ -15,6 +15,7 @@ using Cannonball.Engine.Procedural.Objects;
 using Cannonball.Engine.Inputs;
 using Cannonball.Engine.Procedural.Algorithms;
 using Cannonball.Engine.Procedural.Algorithms.LSystems;
+using System.Threading.Tasks;
 #endregion
 
 namespace Cannonball
@@ -24,7 +25,7 @@ namespace Cannonball
     /// </summary>
     public class SphereTestGame : Game
     {
-        private const int maximumNumberOfSpheres = 100;
+        private const int maximumNumberOfSpheres = 1000;
         const float worldSize = 500f;
 
         GraphicsDeviceManager graphics;
@@ -33,7 +34,12 @@ namespace Cannonball
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
         InputSystem inputSystem;
-        Primitive cube;
+        Primitive player;
+        List<Primitive> entities = new List<Primitive>();
+
+        int frameRate = 0;
+        int frameCounter = 0;
+        TimeSpan elapsedTime = TimeSpan.Zero;
 
         float cameraAngle = 0;
         float cameraHeight = 0;
@@ -55,6 +61,7 @@ namespace Cannonball
         /// </summary>
         protected override void Initialize()
         {
+            this.IsFixedTimeStep = false;
             // TODO: Add your initialization logic here
             Primitives.Initialize(GraphicsDevice);
 
@@ -110,16 +117,20 @@ namespace Cannonball
                     else
                     {
                         var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                        cube.Forward = Vector3.Transform(cube.Forward, transform);
+                        player.Forward = Vector3.Transform(player.Forward, transform);
                     }
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
-                    cube.Velocity += cube.Forward;
+                    player.Velocity += player.Forward;
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
                 {
-                    cube.Velocity -= cube.Forward;
+                    player.Velocity -= player.Forward;
+                });
+            inputSystem.RegisterKeyReleasedAction(Keys.Space, () =>
+                {
+                    player.Velocity = Vector3.Zero;
                 });
 
             base.Initialize();
@@ -137,10 +148,29 @@ namespace Cannonball
             // TODO: use this.Content to load your game content here
             CreateSpheres();
 
-            cube = new Primitive(GraphicsDevice, 10f, true);
-            cube.Position = Vector3.Zero;
-            cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
-            cube.Color = Color.Gray;
+            player = new Primitive(GraphicsDevice, 10f, true);
+            player.Position = Vector3.Zero;
+            player.Scale = new Vector3(player.Scale.X, player.Scale.Y, player.Scale.Z * 3);
+            player.Color = Color.Gray;
+
+            entities.Add(player);
+
+            Random random = new Random();
+            //add some random entities to test 'multiplayer' like environment
+            var entitiesNumber = random.Next(1000,1000);
+            for(int i = 0; i < entitiesNumber; i++)
+            {
+                var entity = new Primitive(GraphicsDevice, (float)random.Next(10, 20), true);
+                entity.Position = new Vector3(
+                                            random.NextFloat(-worldSize, (worldSize * random.Next(-1, 1))),
+                                            random.NextFloat(-worldSize, (worldSize * random.Next(-1, 1))),
+                                            random.NextFloat(-worldSize, (worldSize * random.Next(-1, 1)))
+                                            );
+                entity.Scale = new Vector3(player.Scale.X, player.Scale.Y, player.Scale.Z * 3);
+                entity.Color = Color.Red;
+
+                entities.Add(entity);
+            }
         }
 
         private void CreateSpheres()
@@ -157,7 +187,7 @@ namespace Cannonball
             };
 
             // The radius of a sphere
-            const float radius = 1f;
+            const float radius = 10f;
 
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
@@ -200,18 +230,48 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            elapsedTime += gameTime.ElapsedGameTime;
+
+            if (elapsedTime > TimeSpan.FromSeconds(1))
+            {
+                elapsedTime -= TimeSpan.FromSeconds(1);
+                frameRate = frameCounter;
+                frameCounter = 0;
+            }
+
+            this.Window.Title = string.Format("fps: {0}", frameRate);
+
             inputSystem.Update(gameTime);
 
-            cube.Update(gameTime);
+            //player.Update(gameTime);
+
+            Random random = new Random();
+            Parallel.ForEach(entities , entity =>
+                //foreach(var entity in entities)
+            {
+                if (entity != player)
+                {
+                    if (Math.Abs(entity.Velocity.Length()) < 0.01f)
+                        entity.Velocity = new Vector3(random.NextFloat(-50, 50), random.NextFloat(-50, 50), random.NextFloat(-50, 50));
+                    else
+                        entity.Velocity -= entity.Velocity * 0.001f;
+
+                    entity.Forward = entity.Velocity;
+                }
+
+                entity.Update(gameTime);
+            });
 
             // TODO: Add your update logic here
-            //cameraAngle += 0.001f;
+            //cameraAngle += 0.001f;            
 
             base.Update(gameTime);
         }
 
         private void DrawScene(GameTime gameTime)
         {
+            frameCounter++;
+
             GraphicsDevice.SetRenderTarget(sceneTarget);
 
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
@@ -219,8 +279,8 @@ namespace Cannonball
             GraphicsDevice.Clear(Color.Black);
 
             //camera.Position = Vector3.Transform(camera.Position, Matrix.CreateFromAxisAngle(camera.Up, 0.002f));
-            camera.Position = (new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize + cameraHeight, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel) + cube.Position;
-            camera.Target = cube.Position;
+            camera.Position = (new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize + cameraHeight, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel) + player.Position;
+            camera.Target = player.Position;
 
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
@@ -228,7 +288,12 @@ namespace Cannonball
                 spheres[i].Draw(camera.ViewMatrix, camera.ProjectionMatrix);
             }
 
-            cube.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+            //player.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+
+            foreach (var entity in entities)
+            {
+                entity.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+            }
 
             GraphicsDevice.SetRenderTarget(null);
         }
