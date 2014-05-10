@@ -43,6 +43,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameObjects\FollowCamera.cs" />
+    <Compile Include="GameObjects\IWorldObject.cs" />
     <Compile Include="GameObjects\Primitive.cs" />
     <Compile Include="Graphics\Billboard.cs" />
     <Compile Include="Graphics\Drawings\SpriteBatchHelpers.cs" />

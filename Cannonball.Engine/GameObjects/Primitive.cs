@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Cannonball.Engine.GameObjects
 {
-    public class Primitive
+    public class Primitive : IWorldObject
     {
         private GeometricPrimitive primitive;
 
@@ -47,5 +47,32 @@ namespace Cannonball.Engine.GameObjects
             primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateWorld(Position, Forward, Up)
                 , view, projection, Color);
         }
+
+        #region IWorldObject
+        Vector3 IWorldObject.Position
+        {
+            get { return this.Position; }
+        }
+
+        Vector3 IWorldObject.Velocity
+        {
+            get { return this.Velocity; }
+        }
+
+        Vector3 IWorldObject.Scale
+        {
+            get { return this.Scale; }
+        }
+
+        Vector3 IWorldObject.Forward
+        {
+            get { return this.Forward; }
+        }
+
+        Vector3 IWorldObject.Up
+        {
+            get { return this.Up; }
+        }
+        #endregion
     }
 }

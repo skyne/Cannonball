@@ -38,13 +38,9 @@ namespace Cannonball
         Primitive[] spheres = new Primitive[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
+        FollowCamera followCam;
         InputSystem inputSystem;
         Primitive cube;
-
-        float cameraAngle = 0;
-        float cameraHeight = 0;
-        float zoomLevel = 1;
-        bool cameraMode = false;
 
         ParticleSettings pSet;
         ParticleSystem pSys;
@@ -90,38 +86,21 @@ namespace Cannonball
             inputSystem.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
             inputSystem.RegisterMouseWheelAction(change =>
                 {
-                    var prevZoomLevel = zoomLevel;
                     if (change < 0)
                     {
                         // closing to focus point
-                        if (zoomLevel < 1) zoomLevel -= 0.025f;
-                        else zoomLevel -= 0.1f;
+                        followCam.Distance /= 2f;
                     }
                     else if (change > 0)
                     {
-                        if (zoomLevel < 1) zoomLevel += 0.025f;
-                        else zoomLevel += 0.1f;
+                        followCam.Distance *= 2f;
                     }
-                    if (zoomLevel <= 0) zoomLevel = prevZoomLevel;
                 });
-            inputSystem.RegisterMouseButtonPressedAction(MouseButtons.MiddleButton, () => cameraMode = true);
-            inputSystem.RegisterMouseButtonReleasedAction(MouseButtons.MiddleButton, () => cameraMode = false);
             inputSystem.RegisterMouseMoveAction((x, y) =>
                 {
-                    if (cameraMode)
-                    {
-                        var axis = Vector3.Cross(camera.Target - camera.Position, camera.Up);
-                        var transform = Quaternion.CreateFromAxisAngle(axis, MathHelper.ToRadians(y * 10));
-                        camera.Position = Vector3.Transform(camera.Position, transform);
-
-                        cameraAngle += MathHelper.ToRadians(x);
-                        cameraHeight += y % 10;
-                    }
-                    else
-                    {
-                        var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                        cube.Forward = Vector3.Transform(cube.Forward, transform);
-                    }
+                    var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
+                    cube.Forward = Vector3.Transform(cube.Forward, transform);
+                    cube.Up = Vector3.Transform(cube.Up, transform);
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
@@ -149,10 +128,12 @@ namespace Cannonball
             // TODO: use this.Content to load your game content here
             CreateSpheres();
 
-            cube = new Primitive(GraphicsDevice, 10f, Primitives.Cube);
+            cube = new Primitive(GraphicsDevice, 1f, Primitives.Cube);
             cube.Position = Vector3.Zero;
             cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
             cube.Color = Color.Gray;
+
+            followCam = new FollowCamera(camera, cube);
 
             var segments = LightningGenerator.GetForked(Vector2.UnitX * 25, new Vector2(25, 100), 45, MathHelper.ToRadians(45), 0.7f, 5, 1);
             var target = new RenderTarget2D(GraphicsDevice, 50, 100, false
@@ -187,10 +168,10 @@ namespace Cannonball
                 MaxColor = Color.White,
                 MinRotateSpeed = -0.1f,
                 MaxRotateSpeed = 0.1f,
-                MinStartSize = 3,
-                MaxStartSize = 5,
-                MinEndSize = 10,
-                MaxEndSize = 20
+                MinStartSize = 0.25f,
+                MaxStartSize = 0.35f,
+                MinEndSize = 1,
+                MaxEndSize = 2
             };
 
             var pTex = new Texture2D(GraphicsDevice, 5, 5);
@@ -265,11 +246,9 @@ namespace Cannonball
         {
             inputSystem.Update(gameTime);
             cube.Update(gameTime);
+            followCam.Update(gameTime);
             pEmi.Position = cube.Position - cube.Forward * cube.Scale.Z;
             pSys.Update(gameTime);
-
-            // TODO: Add your update logic here
-            //cameraAngle += 0.001f;
 
             base.Update(gameTime);
         }
@@ -281,10 +260,6 @@ namespace Cannonball
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
             GraphicsDevice.Clear(Color.Black);
-
-            //camera.Position = Vector3.Transform(camera.Position, Matrix.CreateFromAxisAngle(camera.Up, 0.002f));
-            camera.Position = (new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize + cameraHeight, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel) + cube.Position;
-            camera.Target = cube.Position;
 
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
