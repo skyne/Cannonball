@@ -15,18 +15,35 @@ namespace Cannonball.Engine.GameObjects
 
         public float Distance { get; set; }
 
+        public int TicksToCatchUp { get; set; }
+
         public FollowCamera(ICamera camera, IWorldObject target)
         {
             this.camera = camera;
             this.target = target;
             Distance = 1.0f;
+            TicksToCatchUp = 200;
         }
+
+        private Vector3 prevPosToBeReached;
+        private int updateCount = 1;
 
         public void Update(GameTime gameTime)
         {
             this.camera.Up = target.Up;
             this.camera.Target = target.Position + target.Forward * target.Scale.Z;
-            this.camera.Position = target.Position + target.Up * target.Scale.Y - target.Forward * target.Scale.Z * Distance;
+
+            var posToBeReached = target.Position + target.Up * target.Scale.Y - target.Forward * target.Scale.Z * Distance;
+            if (posToBeReached != prevPosToBeReached)
+            {
+                updateCount = 1;
+            }
+            else updateCount += (int)Math.Sqrt(Math.Sqrt(Math.Sqrt(updateCount))); // power of 1/8
+
+            var t = Math.Min(Math.Max(((float)updateCount / TicksToCatchUp), 0), 1);
+            this.camera.Position += (posToBeReached - this.camera.Position) * t;
+
+            prevPosToBeReached = posToBeReached;
         }
     }
 }
