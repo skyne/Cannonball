@@ -10,11 +10,13 @@ namespace Cannonball.Engine.Procedural.Objects
     {
         public static CubePrimitive Cube { get; private set; }
         public static SpherePrimitive Sphere { get; private set; }
+        public static PlanePrimitive Plane { get; private set; }
 
         public static void Initialize(GraphicsDevice device)
         {
             Cube = new CubePrimitive(device);
             Sphere = new SpherePrimitive(device);
+            Plane = new PlanePrimitive(device);
         }
     }
 }

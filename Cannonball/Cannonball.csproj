@@ -54,6 +54,7 @@
     <Compile Include="LSystemTestGame.cs" />
     <Compile Include="ParticleTestGame.cs" />
     <Compile Include="PlasmaTestGame.cs" />
+    <Compile Include="PrimitiveTestGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphereTestGame.cs" />

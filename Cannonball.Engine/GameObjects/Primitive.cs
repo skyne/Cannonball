@@ -29,10 +29,9 @@ namespace Cannonball.Engine.GameObjects
             get { return new BoundingBox(-Scale, Scale); }
         }
 
-        public Primitive(GraphicsDevice graphics, float radius, bool cube = false)
+        public Primitive(GraphicsDevice graphics, float radius, GeometricPrimitive geometry)
         {
-            if (cube) primitive = Primitives.Cube;
-            else primitive = Primitives.Sphere;
+            primitive = geometry;
             Scale = new Vector3(radius);
             Up = Vector3.Up;
             Forward = Vector3.Forward;

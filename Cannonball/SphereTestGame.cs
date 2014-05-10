@@ -149,7 +149,7 @@ namespace Cannonball
             // TODO: use this.Content to load your game content here
             CreateSpheres();
 
-            cube = new Primitive(GraphicsDevice, 10f, true);
+            cube = new Primitive(GraphicsDevice, 10f, Primitives.Cube);
             cube.Position = Vector3.Zero;
             cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
             cube.Color = Color.Gray;
@@ -225,7 +225,7 @@ namespace Cannonball
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
                 // Create the sphere
-                Primitive sphere = new Primitive(GraphicsDevice, radius);
+                Primitive sphere = new Primitive(GraphicsDevice, radius, Primitives.Sphere);
 
                 // Position the sphere in our world
                 sphere.Position = new Vector3(
