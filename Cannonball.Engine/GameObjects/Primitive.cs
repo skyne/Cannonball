@@ -48,6 +48,12 @@ namespace Cannonball.Engine.GameObjects
                 , view, projection, Color);
         }
 
+        public void Draw(Matrix parentWorld, Matrix view, Matrix projection)
+        {
+            primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateWorld(Position, Forward, Up) * parentWorld
+                , view, projection, Color);
+        }
+
         #region IWorldObject
         Vector3 IWorldObject.Position
         {

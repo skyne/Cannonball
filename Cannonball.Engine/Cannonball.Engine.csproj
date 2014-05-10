@@ -43,6 +43,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameObjects\ComplexObject.cs" />
     <Compile Include="GameObjects\FollowCamera.cs" />
     <Compile Include="GameObjects\IWorldObject.cs" />
     <Compile Include="GameObjects\Primitive.cs" />

@@ -40,11 +40,12 @@ namespace Cannonball
         ICamera camera = new PerspectiveCamera();
         FollowCamera followCam;
         InputSystem inputSystem;
-        Primitive cube;
+        ComplexObject cube;
 
         ParticleSettings pSet;
         ParticleSystem pSys;
         ParticleEmitter pEmi;
+        ParticleEmitter pEmi2;
 
         public SphereTestGame()
             : base()
@@ -98,16 +99,16 @@ namespace Cannonball
             inputSystem.RegisterMouseMoveAction((x, y) =>
                 {
                     var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                    cube.Forward = Vector3.Transform(cube.Forward, transform);
-                    cube.Up = Vector3.Transform(cube.Up, transform);
+                    cube.MainObject.Forward = Vector3.Transform(cube.MainObject.Forward, transform);
+                    cube.MainObject.Up = Vector3.Transform(cube.MainObject.Up, transform);
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
-                    cube.Velocity += cube.Forward;
+                    cube.MainObject.Velocity += cube.MainObject.Forward;
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
                 {
-                    cube.Velocity -= cube.Forward;
+                    cube.MainObject.Velocity -= cube.MainObject.Forward;
                 });
 
             base.Initialize();
@@ -128,10 +129,12 @@ namespace Cannonball
             // TODO: use this.Content to load your game content here
             CreateSpheres();
 
-            cube = new Primitive(GraphicsDevice, 1f, Primitives.Cube);
-            cube.Position = Vector3.Zero;
-            cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
-            cube.Color = Color.Gray;
+            cube = new ComplexObject(GraphicsDevice, 1f, Primitives.Cube);
+            cube.MainObject.Position = Vector3.Zero;
+            cube.MainObject.Scale = new Vector3(cube.MainObject.Scale.X, cube.MainObject.Scale.Y, cube.MainObject.Scale.Z * 3);
+            cube.MainObject.Color = Color.Gray;
+            cube.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = Vector3.UnitX });
+            cube.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = -Vector3.UnitX });
 
             followCam = new FollowCamera(camera, cube);
 
@@ -141,14 +144,14 @@ namespace Cannonball
             pSet = new ParticleSettings()
             {
                 BlendState = BlendState.Additive,
-                MaxParticles = 10,
+                MaxParticles = 100,
                 Duration = TimeSpan.FromSeconds(2),
                 DurationRandomness = 1,
                 EmitterVelocitySensitivity = 1,
-                MinHorizontalVelocity = -0.2f,
-                MaxHorizontalVelocity = 0.2f,
-                MinVerticalVelocity = -0.2f,
-                MaxVerticalVelocity = 0.2f,
+                MinHorizontalVelocity = 0.1f,
+                MaxHorizontalVelocity = 0.1f,
+                MinVerticalVelocity = -0.1f,
+                MaxVerticalVelocity = 0.1f,
                 Gravity = Vector3.Zero,
                 EndVelocity = 0,
                 MinColor = Color.White,
@@ -157,8 +160,8 @@ namespace Cannonball
                 MaxRotateSpeed = 0.1f,
                 MinStartSize = 0.25f,
                 MaxStartSize = 0.35f,
-                MinEndSize = 1,
-                MaxEndSize = 2
+                MinEndSize = 0.5f,
+                MaxEndSize = 0.6f
             };
 
             var pTex = new Texture2D(GraphicsDevice, 5, 5);
@@ -167,8 +170,8 @@ namespace Cannonball
             var pEff = Content.Load<Effect>("Shaders/Particles");
 
             pSys = new ParticleSystem(GraphicsDevice, pSet, pTex, pEff, camera);
-            pEmi = new ParticleEmitter(pSys) { Position = Vector3.Zero, ParticlesPerSecond = 10 };
-            //pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitX, ParticlesPerSecond = 10 };
+            pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitX, ParticlesPerSecond = 10 };
+            pEmi2 = new ParticleEmitter(pSys) { Position = -Vector3.UnitX, ParticlesPerSecond = 10 };
             //pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitY, ParticlesPerSecond = 10 };
             //pEmi = new ParticleEmitter(pSys) { Position = new Vector3(Vector2.One, 0), ParticlesPerSecond = 10 };
             #endregion
@@ -234,7 +237,8 @@ namespace Cannonball
             inputSystem.Update(gameTime);
             cube.Update(gameTime);
             followCam.Update(gameTime);
-            pEmi.Position = cube.Position - cube.Forward * cube.Scale.Z;
+            pEmi.Position = cube.MainObject.Position - cube.MainObject.Forward * cube.MainObject.Scale.Z;
+            pEmi2.Position = cube.MainObject.Position - cube.MainObject.Forward * cube.MainObject.Scale.Z;
             pSys.Update(gameTime);
 
             base.Update(gameTime);
@@ -257,7 +261,7 @@ namespace Cannonball
                 GraphicsDevice.DrawPlane(Matrix.CreateScale(2) * Matrix.CreateWorld(spheres[i].Position, forward, Vector3.Up), lightningTexture, camera);
             }
 
-            cube.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+            cube.Draw(Matrix.Identity, camera.ViewMatrix, camera.ProjectionMatrix);
 
             pSys.Draw(gameTime);
 
