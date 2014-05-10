@@ -62,7 +62,6 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Primitives.Initialize(GraphicsDevice);
 
             sceneTarget = new RenderTarget2D(GraphicsDevice
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
@@ -122,8 +121,9 @@ namespace Cannonball
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            SpriteBatchHelpers.Initialize(this.GraphicsDevice);
-            Billboard.Initialize(this.GraphicsDevice, Content.Load<Effect>("Shaders/Billboarding"));
+            SpriteBatchHelpers.Initialize(GraphicsDevice);
+            Primitives.Initialize(GraphicsDevice);
+            Billboard.Initialize(GraphicsDevice, Content.Load<Effect>("Shaders/Billboarding"));
 
             // TODO: use this.Content to load your game content here
             CreateSpheres();
@@ -135,20 +135,7 @@ namespace Cannonball
 
             followCam = new FollowCamera(camera, cube);
 
-            var segments = LightningGenerator.GetForked(Vector2.UnitX * 25, new Vector2(25, 100), 45, MathHelper.ToRadians(45), 0.7f, 5, 1);
-            var target = new RenderTarget2D(GraphicsDevice, 50, 100, false
-                , GraphicsDevice.PresentationParameters.BackBufferFormat
-                , GraphicsDevice.PresentationParameters.DepthStencilFormat);
-            var oldTargets = GraphicsDevice.GetRenderTargets();
-            GraphicsDevice.SetRenderTarget(target);
-            spriteBatch.Begin();
-            foreach (var segment in segments)
-            {
-                spriteBatch.DrawLine(segment.From, segment.To, segment.Color);
-            }
-            spriteBatch.End();
-            GraphicsDevice.SetRenderTargets(oldTargets);
-            lightningTexture = target;
+            lightningTexture = new LightningTexture(GraphicsDevice, 50, 100);
 
             #region Particles
             pSet = new ParticleSettings()
