@@ -17,6 +17,8 @@ using Cannonball.Engine.Procedural.Algorithms;
 using Cannonball.Engine.Procedural.Algorithms.LSystems;
 using Cannonball.Engine.Procedural.Effects;
 using Cannonball.Engine.Graphics;
+using Cannonball.Engine.Graphics.Particles;
+using System.Linq;
 #endregion
 
 namespace Cannonball
@@ -43,6 +45,10 @@ namespace Cannonball
         float cameraHeight = 0;
         float zoomLevel = 1;
         bool cameraMode = false;
+
+        ParticleSettings pSet;
+        ParticleSystem pSys;
+        ParticleEmitter pEmi;
 
         public SphereTestGame()
             : base()
@@ -162,6 +168,42 @@ namespace Cannonball
             spriteBatch.End();
             GraphicsDevice.SetRenderTargets(oldTargets);
             lightningTexture = target;
+
+            #region Particles
+            pSet = new ParticleSettings()
+            {
+                BlendState = BlendState.Additive,
+                MaxParticles = 10,
+                Duration = TimeSpan.FromSeconds(2),
+                DurationRandomness = 1,
+                EmitterVelocitySensitivity = 1,
+                MinHorizontalVelocity = -0.2f,
+                MaxHorizontalVelocity = 0.2f,
+                MinVerticalVelocity = -0.2f,
+                MaxVerticalVelocity = 0.2f,
+                Gravity = Vector3.Zero,
+                EndVelocity = 0,
+                MinColor = Color.White,
+                MaxColor = Color.White,
+                MinRotateSpeed = -0.1f,
+                MaxRotateSpeed = 0.1f,
+                MinStartSize = 3,
+                MaxStartSize = 5,
+                MinEndSize = 10,
+                MaxEndSize = 20
+            };
+
+            var pTex = new Texture2D(GraphicsDevice, 5, 5);
+            pTex.SetData(Enumerable.Repeat(Color.FromNonPremultiplied(0, 0, 255, 125), 25).ToArray());
+
+            var pEff = Content.Load<Effect>("Shaders/Particles");
+
+            pSys = new ParticleSystem(GraphicsDevice, pSet, pTex, pEff, camera);
+            pEmi = new ParticleEmitter(pSys) { Position = Vector3.Zero, ParticlesPerSecond = 10 };
+            //pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitX, ParticlesPerSecond = 10 };
+            //pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitY, ParticlesPerSecond = 10 };
+            //pEmi = new ParticleEmitter(pSys) { Position = new Vector3(Vector2.One, 0), ParticlesPerSecond = 10 };
+            #endregion
         }
 
         private void CreateSpheres()
@@ -222,8 +264,9 @@ namespace Cannonball
         protected override void Update(GameTime gameTime)
         {
             inputSystem.Update(gameTime);
-
             cube.Update(gameTime);
+            pEmi.Position = cube.Position - cube.Forward * cube.Scale.Z;
+            pSys.Update(gameTime);
 
             // TODO: Add your update logic here
             //cameraAngle += 0.001f;
@@ -253,6 +296,8 @@ namespace Cannonball
             }
 
             cube.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+
+            pSys.Draw(gameTime);
 
             GraphicsDevice.SetRenderTarget(null);
         }

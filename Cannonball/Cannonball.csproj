@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="LightningTestGame.cs" />
     <Compile Include="LSystemTestGame.cs" />
+    <Compile Include="ParticleTestGame.cs" />
     <Compile Include="PlasmaTestGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +108,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Shaders\Billboarding.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Shaders\Particles.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

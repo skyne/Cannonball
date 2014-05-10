@@ -49,6 +49,10 @@
     <Compile Include="Graphics\Camera\ICamera.cs" />
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />
+    <Compile Include="Graphics\Particles\ParticleEmitter.cs" />
+    <Compile Include="Graphics\Particles\ParticleSettings.cs" />
+    <Compile Include="Graphics\Particles\ParticleSystem.cs" />
+    <Compile Include="Graphics\Particles\ParticleVertex.cs" />
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
     <Compile Include="Inputs\InputSystem.cs" />
     <Compile Include="Inputs\MouseButtons.cs" />
