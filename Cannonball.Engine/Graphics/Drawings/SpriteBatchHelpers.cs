@@ -22,5 +22,10 @@ namespace Microsoft.Xna.Framework.Graphics
             float rotation = (float)Math.Atan2(end.Y - start.Y, end.X - start.X);
             sb.Draw(_lineBase, start, null, color, rotation, Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
+
+        public static void DrawRect(this SpriteBatch sb, Rectangle rect, Color color)
+        {
+            sb.Draw(_lineBase, rect, color);
+        }
     }
 }

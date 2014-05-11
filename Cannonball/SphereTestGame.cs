@@ -19,6 +19,7 @@ using Cannonball.Engine.Procedural.Effects;
 using Cannonball.Engine.Graphics;
 using Cannonball.Engine.Graphics.Particles;
 using System.Linq;
+using Cannonball.Engine.Utils.Diagnostics;
 #endregion
 
 namespace Cannonball
@@ -84,6 +85,10 @@ namespace Cannonball
 
             inputSystem = new InputSystem(this);
             inputSystem.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
+            inputSystem.RegisterKeyReleasedAction(Keys.Tab, () =>
+                {
+                    DiagnosticsManager.Instance.UI.Show();
+                });
             inputSystem.RegisterMouseWheelAction(change =>
                 {
                     if (change < 0)
@@ -122,6 +127,8 @@ namespace Cannonball
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            this.Services.AddService(typeof(SpriteBatch), spriteBatch);
+            DiagnosticsManager.Initialize(this);
             SpriteBatchHelpers.Initialize(GraphicsDevice);
             Primitives.Initialize(GraphicsDevice);
             Billboard.Initialize(GraphicsDevice, Content.Load<Effect>("Shaders/Billboarding"));
@@ -175,6 +182,8 @@ namespace Cannonball
             //pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitY, ParticlesPerSecond = 10 };
             //pEmi = new ParticleEmitter(pSys) { Position = new Vector3(Vector2.One, 0), ParticlesPerSecond = 10 };
             #endregion
+
+            base.LoadContent();
         }
 
         private void CreateSpheres()
@@ -286,9 +295,9 @@ namespace Cannonball
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
                 , GraphicsDevice.PresentationParameters.BackBufferHeight), Color.White);
 
-            spriteBatch.End();
-
             base.Draw(gameTime);
+
+            spriteBatch.End();
         }
     }
 }

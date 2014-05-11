@@ -75,6 +75,11 @@
     <Compile Include="Procedural\Textures\TextureGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ArrayHelpers.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticCommand.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticsCommandHost.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticsManager.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticsUI.cs" />
+    <Compile Include="Utils\Diagnostics\KeyboardHelpers.cs" />
     <Compile Include="Utils\RandomizationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
