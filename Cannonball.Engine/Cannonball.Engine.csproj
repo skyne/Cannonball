@@ -79,7 +79,8 @@
     <Compile Include="Utils\Diagnostics\DiagnosticsCommandHost.cs" />
     <Compile Include="Utils\Diagnostics\DiagnosticsManager.cs" />
     <Compile Include="Utils\Diagnostics\DiagnosticsUI.cs" />
-    <Compile Include="Utils\Diagnostics\KeyboardHelpers.cs" />
+    <Compile Include="Utils\KeyboardHelpers.cs" />
+    <Compile Include="Utils\Diagnostics\Subsystems\FPSCounter.cs" />
     <Compile Include="Utils\RandomizationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

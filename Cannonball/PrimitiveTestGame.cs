@@ -40,7 +40,6 @@ namespace Cannonball
         float cameraAngle = 0;
         float cameraHeight = 0;
         float zoomLevel = 1;
-        bool cameraMode = false;
 
         public PrimitiveTestGame()
             : base()

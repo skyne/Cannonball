@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Cannonball.Engine.Utils.Diagnostics.Subsystems;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace Cannonball.Engine.Utils.Diagnostics
 
         private readonly DiagnosticsUI ui;
         private readonly DiagnosticsCommandHost host;
+        private readonly FPSCounter fps;
 
         public DiagnosticsUI UI
         {
@@ -42,11 +44,19 @@ namespace Cannonball.Engine.Utils.Diagnostics
                 return host;
             }
         }
+        public FPSCounter FPS
+        {
+            get
+            {
+                return fps;
+            }
+        }
 
         public DiagnosticsManager(Game game)
         {
             ui = new DiagnosticsUI(game, this);
             host = new DiagnosticsCommandHost(ui);
+            fps = new FPSCounter(game, this);
             
             InitBasicCommands();
         }
@@ -76,6 +86,13 @@ namespace Cannonball.Engine.Utils.Diagnostics
             host.RegisterCommand("echo", "Display messages", (chost, args) =>
                 {
                     ui.Echo(args.Aggregate((acc, next) => acc + " " + next));
+
+                    return 0;
+                });
+
+            host.RegisterCommand("efail", "Environmental hard failing", (chost, args) =>
+                {
+                    Environment.FailFast("Test fail from in-game command line!");
 
                     return 0;
                 });

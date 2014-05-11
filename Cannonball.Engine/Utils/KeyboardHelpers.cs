@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cannonball.Engine.Utils.Diagnostics
+namespace Cannonball.Engine.Utils
 {
     public static class KeyboardHelpers
     {
