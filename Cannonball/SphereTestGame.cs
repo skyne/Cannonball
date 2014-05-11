@@ -48,6 +48,8 @@ namespace Cannonball
         ParticleEmitter pEmi;
         ParticleEmitter pEmi2;
 
+        bool cmdShowed = false;
+
         public SphereTestGame()
             : base()
         {
@@ -246,6 +248,9 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            DiagnosticsManager.Instance.TimeRuler.StartFrame();
+            DiagnosticsManager.Instance.TimeRuler.BeginMark("Update", Color.Blue);
+
             inputSystem.Update(gameTime);
             cube.Update(gameTime);
             followCam.Update(gameTime);
@@ -254,6 +259,8 @@ namespace Cannonball
             pSys.Update(gameTime);
 
             base.Update(gameTime);
+
+            DiagnosticsManager.Instance.TimeRuler.EndMark("Update");
         }
 
         private void DrawScene(GameTime gameTime)
@@ -286,6 +293,8 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            DiagnosticsManager.Instance.TimeRuler.BeginMark("Draw", Color.Red);
+
             DrawScene(gameTime);
 
             GraphicsDevice.Clear(Color.Black);
@@ -301,6 +310,8 @@ namespace Cannonball
             base.Draw(gameTime);
 
             spriteBatch.End();
+
+            DiagnosticsManager.Instance.TimeRuler.EndMark("Draw");
         }
     }
 }

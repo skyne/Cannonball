@@ -29,6 +29,7 @@ namespace Cannonball.Engine.Utils.Diagnostics
         private readonly DiagnosticsUI ui;
         private readonly DiagnosticsCommandHost host;
         private readonly FPSCounter fps;
+        private readonly TimeRuler ruler;
 
         public DiagnosticsUI UI
         {
@@ -51,12 +52,20 @@ namespace Cannonball.Engine.Utils.Diagnostics
                 return fps;
             }
         }
+        public TimeRuler TimeRuler
+        {
+            get
+            {
+                return ruler;
+            }
+        }
 
         public DiagnosticsManager(Game game)
         {
             ui = new DiagnosticsUI(game, this);
             host = new DiagnosticsCommandHost(ui);
             fps = new FPSCounter(game, this);
+            ruler = new TimeRuler(game, this);
             
             InitBasicCommands();
         }
