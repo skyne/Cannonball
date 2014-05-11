@@ -75,7 +75,7 @@ namespace Cannonball.Engine.Utils.Diagnostics
 
             host.RegisterCommand("echo", "Display messages", (chost, args) =>
                 {
-                    ui.Echo(args.First());
+                    ui.Echo(args.Aggregate((acc, next) => acc + " " + next));
 
                     return 0;
                 });
