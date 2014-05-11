@@ -38,7 +38,7 @@ namespace Cannonball.Engine.GameObjects
             {
                 updateCount = 1;
             }
-            else updateCount += (int)Math.Sqrt(Math.Sqrt(Math.Sqrt(updateCount))); // power of 1/8
+            else updateCount += (int)(Math.Sqrt(Math.Sqrt(Math.Sqrt(updateCount))) * (target.Velocity.Length() * 20 + 1)); // power of 1/8
 
             var t = Math.Min(Math.Max(((float)updateCount / TicksToCatchUp), 0), 1);
             this.camera.Position += (posToBeReached - this.camera.Position) * t;

@@ -103,9 +103,12 @@ namespace Cannonball
                 });
             inputSystem.RegisterMouseMoveAction((x, y) =>
                 {
-                    var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                    cube.MainObject.Forward = Vector3.Transform(cube.MainObject.Forward, transform);
-                    cube.MainObject.Up = Vector3.Transform(cube.MainObject.Up, transform);
+                    var horizontalRotation = Quaternion.CreateFromAxisAngle(cube.MainObject.Up, MathHelper.ToRadians((float)-x / 10));
+                    var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(cube.MainObject.Up, cube.MainObject.Forward), MathHelper.ToRadians((float)y / 10));
+                    //var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
+                    cube.MainObject.Forward = Vector3.Transform(cube.MainObject.Forward, horizontalRotation);
+                    cube.MainObject.Forward = Vector3.Transform(cube.MainObject.Forward, verticalRotation);
+                    cube.MainObject.Up = Vector3.Transform(cube.MainObject.Up, verticalRotation);
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
