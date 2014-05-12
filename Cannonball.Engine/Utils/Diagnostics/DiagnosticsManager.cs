@@ -30,6 +30,7 @@ namespace Cannonball.Engine.Utils.Diagnostics
         private readonly DiagnosticsCommandHost host;
         private readonly FPSCounter fps;
         private readonly TimeRuler ruler;
+        private readonly GameComponentFactory factory;
 
         public DiagnosticsUI UI
         {
@@ -59,6 +60,13 @@ namespace Cannonball.Engine.Utils.Diagnostics
                 return ruler;
             }
         }
+        public GameComponentFactory Factory
+        {
+            get
+            {
+                return factory;
+            }
+        }
 
         public DiagnosticsManager(Game game)
         {
@@ -66,6 +74,7 @@ namespace Cannonball.Engine.Utils.Diagnostics
             host = new DiagnosticsCommandHost(ui);
             fps = new FPSCounter(game, this);
             ruler = new TimeRuler(game, this);
+            factory = new GameComponentFactory(game, this);
             
             InitBasicCommands();
         }
