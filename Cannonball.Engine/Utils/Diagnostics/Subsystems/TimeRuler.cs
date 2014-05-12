@@ -56,6 +56,9 @@ namespace Cannonball.Engine.Utils.Diagnostics.Subsystems
             BarPadding = 2;
             AutoAdjustDelay = 30;
 
+            Position = new Vector2(10, 4);
+            Width = GraphicsDevice.PresentationParameters.BackBufferWidth - 20;
+
             manager.Host.RegisterCommand("tr", "TimeRuler subsystem, use the \"help\" arg to get more info!", (host, args) =>
                 {
                     bool previousVisible = Visible;
