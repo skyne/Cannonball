@@ -251,6 +251,8 @@ namespace Cannonball
             DiagnosticsManager.Instance.TimeRuler.StartFrame();
             DiagnosticsManager.Instance.TimeRuler.BeginMark("Update", Color.Blue);
 
+            System.Threading.Thread.Sleep(4);
+
             inputSystem.Update(gameTime);
             cube.Update(gameTime);
             followCam.Update(gameTime);

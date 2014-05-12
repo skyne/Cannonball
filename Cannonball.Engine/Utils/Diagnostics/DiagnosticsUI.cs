@@ -137,11 +137,11 @@ namespace Cannonball.Engine.Utils.Diagnostics
                     ProcessKeyInputs(dt, keyState);
                     break;
                 case State.Closing:
-                    stateTransition += dt * CloseSpeed;
-                    if (stateTransition > 1.0f)
+                    stateTransition -= dt * CloseSpeed;
+                    if (stateTransition < 0.0f)
                     {
-                        stateTransition = 1.0f;
-                        state = State.Opened;
+                        stateTransition = 0.0f;
+                        state = State.Closed;
                     }
                     break;
             }
