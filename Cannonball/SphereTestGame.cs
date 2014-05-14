@@ -105,20 +105,20 @@ namespace Cannonball
                 });
             inputSystem.RegisterMouseMoveAction((x, y) =>
                 {
-                    var horizontalRotation = Quaternion.CreateFromAxisAngle(cube.MainObject.Up, MathHelper.ToRadians((float)-x / 10));
-                    var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(cube.MainObject.Up, cube.MainObject.Forward), MathHelper.ToRadians((float)y / 10));
+                    var horizontalRotation = Quaternion.CreateFromAxisAngle(cube.Up, MathHelper.ToRadians((float)-x / 10));
+                    var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(cube.Up, cube.Forward), MathHelper.ToRadians((float)y / 10));
                     //var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                    cube.MainObject.Forward = Vector3.Transform(cube.MainObject.Forward, horizontalRotation);
-                    cube.MainObject.Forward = Vector3.Transform(cube.MainObject.Forward, verticalRotation);
-                    cube.MainObject.Up = Vector3.Transform(cube.MainObject.Up, verticalRotation);
+                    cube.Forward = Vector3.Transform(cube.Forward, horizontalRotation);
+                    cube.Forward = Vector3.Transform(cube.Forward, verticalRotation);
+                    cube.Up = Vector3.Transform(cube.Up, verticalRotation);
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
-                    cube.MainObject.Velocity += cube.MainObject.Forward;
+                    cube.Velocity += cube.Forward;
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
                 {
-                    cube.MainObject.Velocity -= cube.MainObject.Forward;
+                    cube.Velocity -= cube.Forward;
                 });
 
             base.Initialize();
@@ -142,9 +142,9 @@ namespace Cannonball
             CreateSpheres();
 
             cube = new ComplexObject(GraphicsDevice, 1f, Primitives.Cube);
-            cube.MainObject.Position = Vector3.Zero;
-            cube.MainObject.Scale = new Vector3(cube.MainObject.Scale.X, cube.MainObject.Scale.Y, cube.MainObject.Scale.Z * 3);
-            cube.MainObject.Color = Color.Gray;
+            cube.Position = Vector3.Zero;
+            cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
+            cube.Color = Color.Gray;
             cube.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = Vector3.UnitX });
             cube.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = -Vector3.UnitX });
 
@@ -256,8 +256,8 @@ namespace Cannonball
             inputSystem.Update(gameTime);
             cube.Update(gameTime);
             followCam.Update(gameTime);
-            pEmi.Position = cube.MainObject.Position - cube.MainObject.Forward * cube.MainObject.Scale.Z;
-            pEmi2.Position = cube.MainObject.Position - cube.MainObject.Forward * cube.MainObject.Scale.Z;
+            pEmi.Position = cube.Position - cube.Forward * cube.Scale.Z;
+            pEmi2.Position = cube.Position - cube.Forward * cube.Scale.Z;
             pSys.Update(gameTime);
 
             base.Update(gameTime);

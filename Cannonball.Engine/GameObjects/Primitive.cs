@@ -37,18 +37,18 @@ namespace Cannonball.Engine.GameObjects
             Forward = Vector3.Forward;
         }
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void Draw(Matrix view, Matrix projection)
+        public virtual void Draw(Matrix view, Matrix projection)
         {
             primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateWorld(Position, Forward, Up)
                 , view, projection, Color);
         }
 
-        public void Draw(Matrix parentWorld, Matrix view, Matrix projection)
+        public virtual void Draw(Matrix parentWorld, Matrix view, Matrix projection)
         {
             primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateWorld(Position, Forward, Up) * parentWorld
                 , view, projection, Color);

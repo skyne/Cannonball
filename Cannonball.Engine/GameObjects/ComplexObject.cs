@@ -8,24 +8,22 @@ using System.Text;
 
 namespace Cannonball.Engine.GameObjects
 {
-    public class ComplexObject : IWorldObject
+    public class ComplexObject : Primitive
     {
-        public Primitive MainObject { get; set; }
-
         public List<Primitive> PrimitiveObjects { get; set; }
 
         public List<ComplexObject> ComplexObjects { get; set; }
 
         public ComplexObject(GraphicsDevice device, float radius, GeometricPrimitive geometry)
+            : base(device, radius, geometry)
         {
-            MainObject = new Primitive(device, radius, geometry);
             PrimitiveObjects = new List<Primitive>();
             ComplexObjects = new List<ComplexObject>();
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            MainObject.Update(gameTime);
+            base.Update(gameTime);
 
             foreach (var obj in PrimitiveObjects)
             {
@@ -38,10 +36,10 @@ namespace Cannonball.Engine.GameObjects
             }
         }
 
-        public void Draw(Matrix parentWorld, Matrix view, Matrix projection)
+        public override void Draw(Matrix parentWorld, Matrix view, Matrix projection)
         {
-            var world = Matrix.CreateWorld(MainObject.Position, MainObject.Forward, MainObject.Up) * parentWorld;
-            MainObject.Draw(view, projection);
+            var world = Matrix.CreateWorld(Position, Forward, Up) * parentWorld;
+            base.Draw(view, projection);
 
             foreach (var obj in PrimitiveObjects)
             {
@@ -52,31 +50,6 @@ namespace Cannonball.Engine.GameObjects
             {
                 obj.Draw(world, view, projection);
             }
-        }
-
-        public Vector3 Position
-        {
-            get { return MainObject.Position; }
-        }
-
-        public Vector3 Velocity
-        {
-            get { return MainObject.Velocity; }
-        }
-
-        public Vector3 Scale
-        {
-            get { return MainObject.Scale; }
-        }
-
-        public Vector3 Forward
-        {
-            get { return MainObject.Forward; }
-        }
-
-        public Vector3 Up
-        {
-            get { return MainObject.Up; }
         }
     }
 }
