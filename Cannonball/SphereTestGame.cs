@@ -20,6 +20,7 @@ using Cannonball.Engine.Graphics;
 using Cannonball.Engine.Graphics.Particles;
 using System.Linq;
 using Cannonball.Engine.Utils.Diagnostics;
+using Cannonball.GameObjects;
 #endregion
 
 namespace Cannonball
@@ -41,14 +42,13 @@ namespace Cannonball
         ICamera camera = new PerspectiveCamera();
         FollowCamera followCam;
         InputSystem inputSystem;
-        ComplexObject cube;
+        //ComplexObject cube;
+        Ship ship;
 
         ParticleSettings pSet;
         ParticleSystem pSys;
         ParticleEmitter pEmi;
         ParticleEmitter pEmi2;
-
-        bool cmdShowed = false;
 
         public SphereTestGame()
             : base()
@@ -105,21 +105,24 @@ namespace Cannonball
                 });
             inputSystem.RegisterMouseMoveAction((x, y) =>
                 {
-                    var horizontalRotation = Quaternion.CreateFromAxisAngle(cube.Up, MathHelper.ToRadians((float)-x / 10));
-                    var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(cube.Up, cube.Forward), MathHelper.ToRadians((float)y / 10));
+                    var horizontalRotation = Quaternion.CreateFromAxisAngle(ship.Up, MathHelper.ToRadians((float)-x / 10));
+                    var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(ship.Up, ship.Forward), MathHelper.ToRadians((float)y / 10));
                     //var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                    cube.Forward = Vector3.Transform(cube.Forward, horizontalRotation);
-                    cube.Forward = Vector3.Transform(cube.Forward, verticalRotation);
-                    cube.Up = Vector3.Transform(cube.Up, verticalRotation);
+                    ship.Forward = Vector3.Transform(ship.Forward, horizontalRotation);
+                    ship.Forward = Vector3.Transform(ship.Forward, verticalRotation);
+                    ship.Up = Vector3.Transform(ship.Up, verticalRotation);
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
-                    cube.Velocity += cube.Forward;
+                    ship.Velocity += ship.Forward;
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
                 {
-                    cube.Velocity -= cube.Forward;
+                    ship.Velocity -= ship.Forward;
                 });
+
+            Services.AddService(typeof(ICamera), camera);
+            Services.AddService(typeof(InputSystem), inputSystem);
 
             base.Initialize();
         }
@@ -141,14 +144,8 @@ namespace Cannonball
             // TODO: use this.Content to load your game content here
             CreateSpheres();
 
-            cube = new ComplexObject(GraphicsDevice, 1f, Primitives.Cube);
-            cube.Position = Vector3.Zero;
-            cube.Scale = new Vector3(cube.Scale.X, cube.Scale.Y, cube.Scale.Z * 3);
-            cube.Color = Color.Gray;
-            cube.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = Vector3.UnitX });
-            cube.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = -Vector3.UnitX });
-
-            followCam = new FollowCamera(camera, cube);
+            ship = new Ship(this);
+            followCam = new FollowCamera(camera, ship);
 
             lightningTexture = new LightningTexture(GraphicsDevice, 50, 100);
 
@@ -251,13 +248,10 @@ namespace Cannonball
             DiagnosticsManager.Instance.TimeRuler.StartFrame();
             DiagnosticsManager.Instance.TimeRuler.BeginMark("Update", Color.Blue);
 
-            System.Threading.Thread.Sleep(4);
-
             inputSystem.Update(gameTime);
-            cube.Update(gameTime);
             followCam.Update(gameTime);
-            pEmi.Position = cube.Position - cube.Forward * cube.Scale.Z;
-            pEmi2.Position = cube.Position - cube.Forward * cube.Scale.Z;
+            pEmi.Position = ship.Position - ship.Forward * ship.Scale.Z;
+            pEmi2.Position = ship.Position - ship.Forward * ship.Scale.Z;
             pSys.Update(gameTime);
 
             base.Update(gameTime);
@@ -282,7 +276,7 @@ namespace Cannonball
                 GraphicsDevice.DrawPlane(Matrix.CreateScale(2) * Matrix.CreateWorld(spheres[i].Position, forward, Vector3.Up), lightningTexture, camera);
             }
 
-            cube.Draw(Matrix.Identity, camera.ViewMatrix, camera.ProjectionMatrix);
+            //cube.Draw(Matrix.Identity, camera.ViewMatrix, camera.ProjectionMatrix);
 
             pSys.Draw(gameTime);
 
