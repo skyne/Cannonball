@@ -24,6 +24,8 @@ namespace Cannonball.Engine.Graphics.Particles
             set { timeBetweenParticles = 1.0f / value; }
         }
 
+        public bool IsActive { get; set; }
+
         Vector3 actPosition;
         Vector3 previousPosition;
         float timeBetweenParticles;
@@ -38,6 +40,8 @@ namespace Cannonball.Engine.Graphics.Particles
 
         public void Update(GameTime gameTime)
         {
+            if (!IsActive) return;
+
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (elapsedTime > 0)
