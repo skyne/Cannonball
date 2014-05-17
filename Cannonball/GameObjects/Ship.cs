@@ -20,7 +20,6 @@ namespace Cannonball.GameObjects
         public Ship(Game game)
             : base(game)
         {
-            game.Components.Add(this);
             Camera = (ICamera)game.Services.GetService(typeof(ICamera));
 
             obj = new ComplexObject(GraphicsDevice, 1f, Primitives.Cube);

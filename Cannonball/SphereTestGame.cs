@@ -153,10 +153,10 @@ namespace Cannonball
             pSet = new ParticleSettings()
             {
                 BlendState = BlendState.Additive,
-                MaxParticles = 100,
-                Duration = TimeSpan.FromSeconds(2),
-                DurationRandomness = 1,
-                EmitterVelocitySensitivity = 1,
+                MaxParticles = 10,
+                Duration = TimeSpan.FromSeconds(0.5),
+                DurationRandomness = 0.1f,
+                EmitterVelocitySensitivity = 0,
                 MinXVelocity = 0.0f,
                 MaxXVelocity = 0.0f,
                 MinYVelocity = 0.0f,
@@ -252,8 +252,8 @@ namespace Cannonball
 
             inputSystem.Update(gameTime);
             followCam.Update(gameTime);
-            pEmi.Position = ship.Position - ship.Forward * ship.Scale.Z;
-            pEmi2.Position = ship.Position - ship.Forward * ship.Scale.Z;
+            pEmi.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.25f / 2f);
+            pEmi2.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.25f / 2f);
             pSys.Update(gameTime);
 
             base.Update(gameTime);
@@ -279,7 +279,7 @@ namespace Cannonball
             }
 
             //cube.Draw(Matrix.Identity, camera.ViewMatrix, camera.ProjectionMatrix);
-
+            ship.Draw(gameTime);
             pSys.Draw(gameTime);
 
             GraphicsDevice.SetRenderTarget(null);
