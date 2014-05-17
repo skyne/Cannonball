@@ -36,19 +36,23 @@ namespace Cannonball.Engine.Graphics.Particles
         public float EmitterVelocitySensitivity = 1;
 
 
-        // Range of values controlling how much X and Z axis velocity to give each
+        // Range of values controlling how much X axis velocity to give each
         // particle. Values for individual particles are randomly chosen from somewhere
         // between these limits.
-        public float MinHorizontalVelocity = 0;
-        public float MaxHorizontalVelocity = 0;
-
+        public float MinXVelocity = 0;
+        public float MaxXVelocity = 0;
 
         // Range of values controlling how much Y axis velocity to give each particle.
         // Values for individual particles are randomly chosen from somewhere between
         // these limits.
-        public float MinVerticalVelocity = 0;
-        public float MaxVerticalVelocity = 0;
+        public float MinYVelocity = 0;
+        public float MaxYVelocity = 0;
 
+        // Range of values controlling how much Z axis velocity to give each
+        // particle. Values for individual particles are randomly chosen from somewhere
+        // between these limits.
+        public float MinZVelocity = 0;
+        public float MaxZVelocity = 0;
 
         // Direction and strength of the gravity effect. Note that this can point in any
         // direction, not just down! The fire effect points it upward to make the flames

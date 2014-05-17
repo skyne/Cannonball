@@ -92,10 +92,10 @@ namespace Cannonball
                 , Duration = TimeSpan.FromSeconds(1)
                 , DurationRandomness = 1
                 , EmitterVelocitySensitivity = 1
-                , MinHorizontalVelocity = -0.2f
-                , MaxHorizontalVelocity = 0.2f
-                , MinVerticalVelocity = -0.2f
-                , MaxVerticalVelocity = 0.2f
+                , MinXVelocity = -0.2f
+                , MaxXVelocity = 0.2f
+                , MinYVelocity = -0.2f
+                , MaxYVelocity = 0.2f
                 , Gravity = Vector3.Zero
                 , EndVelocity = 0
                 , MinColor = Color.White

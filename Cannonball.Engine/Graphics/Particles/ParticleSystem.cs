@@ -254,16 +254,14 @@ namespace Cannonball.Engine.Graphics.Particles
 
             velocity *= settings.EmitterVelocitySensitivity;
 
-            float horizontalVelocity = MathHelper.Lerp(settings.MinHorizontalVelocity,
-                                                       settings.MaxHorizontalVelocity,
-                                                       (float)rand.NextDouble());
-
-            double horizontalAngle = rand.NextDouble() * MathHelper.TwoPi;
-
-            velocity.X += horizontalVelocity * (float)Math.Cos(horizontalAngle);
-            velocity.Z += horizontalVelocity * (float)Math.Sin(horizontalAngle);
-            velocity.Y += MathHelper.Lerp(settings.MinVerticalVelocity,
-                                          settings.MaxVerticalVelocity,
+            velocity.X += MathHelper.Lerp(settings.MinXVelocity,
+                                          settings.MaxXVelocity,
+                                          (float)rand.NextDouble());
+            velocity.Y += MathHelper.Lerp(settings.MinYVelocity,
+                                          settings.MaxYVelocity,
+                                          (float)rand.NextDouble());
+            velocity.Z += MathHelper.Lerp(settings.MinZVelocity,
+                                          settings.MaxZVelocity,
                                           (float)rand.NextDouble());
 
             Color randomValues = new Color((byte)rand.Next(255),
