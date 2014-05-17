@@ -242,7 +242,7 @@ namespace Cannonball.Engine.Graphics.Particles
             firstNewParticle = firstFreeParticle;
         }
 
-        public void AddParticle(Vector3 position, Vector3 velocity)
+        public void AddParticle(Vector3 position, Vector3 velocity, Vector3 direction)
         {
             int nextFreeParticle = firstFreeParticle + 1;
 
@@ -263,6 +263,22 @@ namespace Cannonball.Engine.Graphics.Particles
             velocity.Z += MathHelper.Lerp(settings.MinZVelocity,
                                           settings.MaxZVelocity,
                                           (float)rand.NextDouble());
+
+            var dirVel = direction * MathHelper.Lerp(settings.MinVelocity, settings.MaxVelocity, rand.NextFloat());
+            if (settings.MaxXAngle != 0 || settings.MinXAngle != 0) 
+                dirVel = Vector3.Transform(dirVel, 
+                            Quaternion.CreateFromAxisAngle(Vector3.UnitX, 
+                                MathHelper.Lerp(settings.MinXAngle, settings.MaxXAngle, rand.NextFloat())));
+            if (settings.MaxYAngle != 0 || settings.MinYAngle != 0)
+                dirVel = Vector3.Transform(dirVel,
+                            Quaternion.CreateFromAxisAngle(Vector3.UnitY,
+                                MathHelper.Lerp(settings.MinYAngle, settings.MaxYAngle, rand.NextFloat())));
+            if (settings.MaxZAngle != 0 || settings.MinZAngle != 0)
+                dirVel = Vector3.Transform(dirVel,
+                            Quaternion.CreateFromAxisAngle(Vector3.UnitZ,
+                                MathHelper.Lerp(settings.MinZAngle, settings.MaxZAngle, rand.NextFloat())));
+
+            velocity += dirVel;
 
             Color randomValues = new Color((byte)rand.Next(255),
                                            (byte)rand.Next(255),

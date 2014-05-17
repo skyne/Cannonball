@@ -18,6 +18,8 @@ namespace Cannonball.Engine.Graphics.Particles
             }
         }
 
+        public Vector3 Direction { get; set; }
+
         public float ParticlesPerSecond
         {
             get { return (1.0f / timeBetweenParticles); }
@@ -57,7 +59,7 @@ namespace Cannonball.Engine.Graphics.Particles
 
                     Vector3 position = Vector3.Lerp(previousPosition, Position, mu);
 
-                    system.AddParticle(position, velocity);
+                    system.AddParticle(position, velocity, Direction);
                 }
 
                 timeLeftOver = timeToSpend;

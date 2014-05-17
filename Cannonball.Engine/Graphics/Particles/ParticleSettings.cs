@@ -54,6 +54,16 @@ namespace Cannonball.Engine.Graphics.Particles
         public float MinZVelocity = 0;
         public float MaxZVelocity = 0;
 
+
+        public float MinVelocity = 0;
+        public float MaxVelocity = 0;
+        public float MinXAngle = 0;
+        public float MaxXAngle = 0;
+        public float MinYAngle = 0;
+        public float MaxYAngle = 0;
+        public float MinZAngle = 0;
+        public float MaxZAngle = 0;
+
         // Direction and strength of the gravity effect. Note that this can point in any
         // direction, not just down! The fire effect points it upward to make the flames
         // rise, and the smoke plume points it sideways to simulate wind.

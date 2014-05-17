@@ -157,12 +157,8 @@ namespace Cannonball
                 Duration = TimeSpan.FromSeconds(0.5),
                 DurationRandomness = 0.1f,
                 EmitterVelocitySensitivity = 0,
-                MinXVelocity = 0.0f,
-                MaxXVelocity = 0.0f,
-                MinYVelocity = 0.0f,
-                MaxYVelocity = 0.0f,
-                MinZVelocity = 1f,
-                MaxZVelocity = 2f,
+                MinVelocity = 1f,
+                MaxVelocity = 2f,
                 Gravity = Vector3.Zero,
                 EndVelocity = 0,
                 MinColor = Color.White,
@@ -254,6 +250,8 @@ namespace Cannonball
             followCam.Update(gameTime);
             pEmi.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.25f / 2f);
             pEmi2.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.25f / 2f);
+            pEmi.Direction = -ship.Forward;
+            pEmi2.Direction = -ship.Forward;
             pSys.Update(gameTime);
 
             base.Update(gameTime);
