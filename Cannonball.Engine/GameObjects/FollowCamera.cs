@@ -14,6 +14,8 @@ namespace Cannonball.Engine.GameObjects
         IWorldObject target;
 
         public float Distance { get; set; }
+        public float HorizontalAngle { get; set; }
+        public float VerticalAngle { get; set; }
 
         public int TicksToCatchUp { get; set; }
 
@@ -34,6 +36,9 @@ namespace Cannonball.Engine.GameObjects
             this.camera.Target = target.Position + target.Forward * target.Scale.Z;
 
             var posToBeReached = target.Position + target.Up * target.Scale.Y - target.Forward * target.Scale.Z * Distance;
+            posToBeReached = Vector3.Transform(posToBeReached, Quaternion.CreateFromAxisAngle(target.Up, HorizontalAngle));
+            posToBeReached = Vector3.Transform(posToBeReached, Quaternion.CreateFromAxisAngle(target.Forward, VerticalAngle));
+
             if (posToBeReached != prevPosToBeReached)
             {
                 updateCount = (int)target.Velocity.LengthSquared() + 1;

@@ -105,12 +105,23 @@ namespace Cannonball
                 });
             inputSystem.RegisterMouseMoveAction((x, y) =>
                 {
-                    var horizontalRotation = Quaternion.CreateFromAxisAngle(ship.Up, MathHelper.ToRadians((float)-x / 10));
-                    var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(ship.Up, ship.Forward), MathHelper.ToRadians((float)y / 10));
-                    //var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                    ship.Forward = Vector3.Transform(ship.Forward, horizontalRotation);
-                    ship.Forward = Vector3.Transform(ship.Forward, verticalRotation);
-                    ship.Up = Vector3.Transform(ship.Up, verticalRotation);
+                    var horizontalAngle = MathHelper.ToRadians((float)-x / 10);
+                    var verticalAngle = MathHelper.ToRadians((float)y / 10);
+
+                    if (inputSystem.CurrentMouseState.MiddleButton == ButtonState.Pressed)
+                    {
+                        followCam.HorizontalAngle += horizontalAngle;
+                        followCam.VerticalAngle += verticalAngle;
+                    }
+                    else
+                    {
+                        var horizontalRotation = Quaternion.CreateFromAxisAngle(ship.Up, horizontalAngle);
+                        var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(ship.Up, ship.Forward), verticalAngle);
+                        //var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
+                        ship.Forward = Vector3.Transform(ship.Forward, horizontalRotation);
+                        ship.Forward = Vector3.Transform(ship.Forward, verticalRotation);
+                        ship.Up = Vector3.Transform(ship.Up, verticalRotation);
+                    }
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
@@ -247,9 +258,10 @@ namespace Cannonball
             DiagnosticsManager.Instance.TimeRuler.BeginMark("Update", Color.Blue);
 
             inputSystem.Update(gameTime);
+            ship.Update(gameTime);
             followCam.Update(gameTime);
-            pEmi.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.25f / 2f);
-            pEmi2.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.25f / 2f);
+            pEmi.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.05f / 2f);
+            pEmi2.Position = ship.Position - ship.Forward * (ship.Scale.Z * 1.05f / 2f);
             pEmi.Direction = -ship.Forward;
             pEmi2.Direction = -ship.Forward;
             pSys.Update(gameTime);
@@ -261,6 +273,7 @@ namespace Cannonball
 
         private void DrawScene(GameTime gameTime)
         {
+            DiagnosticsManager.Instance.TimeRuler.BeginMark("DrawScene", Color.Red);
             GraphicsDevice.SetRenderTarget(sceneTarget);
 
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
@@ -281,6 +294,7 @@ namespace Cannonball
             pSys.Draw(gameTime);
 
             GraphicsDevice.SetRenderTarget(null);
+            DiagnosticsManager.Instance.TimeRuler.EndMark("DrawScene");
         }
 
         /// <summary>
@@ -289,7 +303,7 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            DiagnosticsManager.Instance.TimeRuler.BeginMark("Draw", Color.Red);
+            DiagnosticsManager.Instance.TimeRuler.BeginMark("Draw", Color.Green);
 
             DrawScene(gameTime);
 
