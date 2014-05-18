@@ -115,12 +115,7 @@ namespace Cannonball
                     }
                     else
                     {
-                        var horizontalRotation = Quaternion.CreateFromAxisAngle(ship.Up, horizontalAngle);
-                        var verticalRotation = Quaternion.CreateFromAxisAngle(Vector3.Cross(ship.Up, ship.Forward), verticalAngle);
-                        //var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)-x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                        ship.Forward = Vector3.Transform(ship.Forward, horizontalRotation);
-                        ship.Forward = Vector3.Transform(ship.Forward, verticalRotation);
-                        ship.Up = Vector3.Transform(ship.Up, verticalRotation);
+                        ship.Turn(horizontalAngle, verticalAngle);
                     }
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
@@ -187,7 +182,7 @@ namespace Cannonball
 
             var pEff = Content.Load<Effect>("Shaders/Particles");
 
-            pSys = new ParticleSystem(GraphicsDevice, pSet, pTex, pEff, camera);
+            pSys = new ParticleSystem(this, pSet, pTex, pEff, camera);
             pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitX, ParticlesPerSecond = 10 };
             pEmi2 = new ParticleEmitter(pSys) { Position = -Vector3.UnitX, ParticlesPerSecond = 10 };
             //pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitY, ParticlesPerSecond = 10 };

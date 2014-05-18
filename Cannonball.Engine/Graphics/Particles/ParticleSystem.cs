@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Cannonball.Engine.Graphics.Particles
 {
-    public class ParticleSystem
+    public class ParticleSystem : DrawableGameComponent
     {
         ParticleSettings settings;
         Effect particleEffect;
@@ -27,8 +27,6 @@ namespace Cannonball.Engine.Graphics.Particles
         DynamicVertexBuffer vertexBuffer;
         IndexBuffer indexBuffer;
 
-        GraphicsDevice device;
-
         int firstActiveParticle;
         int firstNewParticle;
         int firstFreeParticle;
@@ -39,10 +37,10 @@ namespace Cannonball.Engine.Graphics.Particles
 
         Random rand;
 
-        public ParticleSystem(GraphicsDevice device, ParticleSettings settings, Texture2D texture, Effect effect, ICamera camera)
+        public ParticleSystem(Game game, ParticleSettings settings, Texture2D texture, Effect effect, ICamera camera)
+            : base(game)
         {
             this.settings = settings;
-            this.device = device;
             this.particleEffect = effect;
             this.camera = camera;
 
@@ -79,7 +77,7 @@ namespace Cannonball.Engine.Graphics.Particles
             }
 
             // Create a dynamic vertex buffer.
-            vertexBuffer = new DynamicVertexBuffer(device, ParticleVertex.VertexDeclaration,
+            vertexBuffer = new DynamicVertexBuffer(GraphicsDevice, ParticleVertex.VertexDeclaration,
                                                    settings.MaxParticles * 4, BufferUsage.WriteOnly);
 
             ushort[] indices = new ushort[settings.MaxParticles * 6];
@@ -95,12 +93,12 @@ namespace Cannonball.Engine.Graphics.Particles
                 indices[i * 6 + 5] = (ushort)(i * 4 + 3);
             }
 
-            indexBuffer = new IndexBuffer(device, typeof(ushort), indices.Length, BufferUsage.WriteOnly);
+            indexBuffer = new IndexBuffer(GraphicsDevice, typeof(ushort), indices.Length, BufferUsage.WriteOnly);
 
             indexBuffer.SetData(indices);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             foreach (var emitter in emitters)
             {
@@ -156,7 +154,7 @@ namespace Cannonball.Engine.Graphics.Particles
             }
         }
 
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             if (vertexBuffer.IsContentLost)
             {
@@ -170,17 +168,17 @@ namespace Cannonball.Engine.Graphics.Particles
 
             if (firstActiveParticle != firstFreeParticle)
             {
-                device.BlendState = settings.BlendState;
-                device.DepthStencilState = DepthStencilState.DepthRead;
+                GraphicsDevice.BlendState = settings.BlendState;
+                GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
 
-                effectViewportScaleParameter.SetValue(new Vector2(0.5f / device.Viewport.AspectRatio, -0.5f));
+                effectViewportScaleParameter.SetValue(new Vector2(0.5f / GraphicsDevice.Viewport.AspectRatio, -0.5f));
 
                 effectTimeParameter.SetValue(currentTime);
                 effectViewParameter.SetValue(camera.ViewMatrix);
                 effectProjectionParameter.SetValue(camera.ProjectionMatrix);
 
-                device.SetVertexBuffer(vertexBuffer);
-                device.Indices = indexBuffer;
+                GraphicsDevice.SetVertexBuffer(vertexBuffer);
+                GraphicsDevice.Indices = indexBuffer;
 
                 foreach (EffectPass pass in particleEffect.CurrentTechnique.Passes)
                 {
@@ -188,26 +186,26 @@ namespace Cannonball.Engine.Graphics.Particles
 
                     if (firstActiveParticle < firstFreeParticle)
                     {
-                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
+                        GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
                                                      firstActiveParticle * 4, (firstFreeParticle - firstActiveParticle) * 4,
                                                      firstActiveParticle * 6, (firstFreeParticle - firstActiveParticle) * 2);
                     }
                     else
                     {
-                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
+                        GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
                                                      firstActiveParticle * 4, (settings.MaxParticles - firstActiveParticle) * 4,
                                                      firstActiveParticle * 6, (settings.MaxParticles - firstActiveParticle) * 2);
 
                         if (firstFreeParticle > 0)
                         {
-                            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
+                            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
                                                          0, firstFreeParticle * 4,
                                                          0, firstFreeParticle * 2);
                         }
                     }
                 }
 
-                device.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             }
 
             drawCounter++;

@@ -113,7 +113,7 @@ namespace Cannonball
 
             var pEff = Content.Load<Effect>("Shaders/Particles");
 
-            pSys = new ParticleSystem(GraphicsDevice, pSet, pTex, pEff, camera);
+            pSys = new ParticleSystem(this, pSet, pTex, pEff, camera);
             pEmi = new ParticleEmitter(pSys) { Position = Vector3.Zero, ParticlesPerSecond = 10 };
             pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitX, ParticlesPerSecond = 10 };
             pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitY, ParticlesPerSecond = 10 };
