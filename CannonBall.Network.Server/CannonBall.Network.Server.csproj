@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0FD4CD0E-C00A-4E53-91E4-88259161DB6C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CannonBall.Network.Server</RootNamespace>
+    <AssemblyName>CannonBall.Network.Server</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Cannonball.Server\bin\Debug\TcpServerPlugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="DFNetwork.Framework, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DFNetwork.Framework.1.0.0.1\lib\net451\DFNetwork.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="DFNetwork.Tcp.Server, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DFNetwork.Tcp.Server.1.0.0.1\lib\net451\DFNetwork.Tcp.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="DFNetwork.Tcp.Shared">
+      <HintPath>..\packages\DFNetwork.Tcp.Shared.1.0.0.0\lib\net451\DFNetwork.Tcp.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="SCP.Common">
+      <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SCP.Productivity">
+      <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Productivity.dll</HintPath>
+    </Reference>
+    <Reference Include="SCP.Shared">
+      <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CannonballServerPlugin.cs" />
+    <Compile Include="PacketHandlers\CHelloHandler.cs" />
+    <Compile Include="PacketHandlers\PacketHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\ServerSideProtocol.cs" />
+    <Compile Include="Session\ClientSession.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cannonball.Network.Packets\Cannonball.Network.Packets.csproj">
+      <Project>{6929602d-840a-43f2-9ba4-d9a852dc2ed0}</Project>
+      <Name>Cannonball.Network.Packets</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Network.Shared\Cannonball.Network.Shared.csproj">
+      <Project>{ba26f7fe-7d4d-416e-8c17-157e9de57ab1}</Project>
+      <Name>Cannonball.Network.Shared</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

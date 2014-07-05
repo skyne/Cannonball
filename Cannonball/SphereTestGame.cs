@@ -21,6 +21,7 @@ using Cannonball.Engine.Graphics.Particles;
 using System.Linq;
 using Cannonball.Engine.Utils.Diagnostics;
 using Cannonball.GameObjects;
+using DFNetwork.Tcp.Client;
 #endregion
 
 namespace Cannonball
@@ -30,8 +31,10 @@ namespace Cannonball
     /// </summary>
     public class SphereTestGame : Game
     {
-        private const int maximumNumberOfSpheres = 100;
+        private const int maximumNumberOfSpheres = 1000;
         const float worldSize = 500f;
+
+        TcpClientNetworkHost networkClient;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -40,10 +43,27 @@ namespace Cannonball
         Primitive[] spheres = new Primitive[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
+
+        int currentlyFollowed;
+        int CurrentlyFollowed
+        {
+            get
+            {
+                return currentlyFollowed;
+            }
+            set
+            {
+                if (value > ships.Count)
+                    currentlyFollowed = 0;
+                if (value < 0)
+                    currentlyFollowed = ships.Count;
+            }
+        }
         FollowCamera followCam;
         InputSystem inputSystem;
         //ComplexObject cube;
-        Ship ship;
+        List<Ship> ships;
+        Ship ship { get { return ships.Single(o => o.IsPlayerControlled); } }
 
         ParticleSettings pSet;
         ParticleSystem pSys;
@@ -66,6 +86,7 @@ namespace Cannonball
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            ships = new List<Ship>(20);
 
             sceneTarget = new RenderTarget2D(GraphicsDevice
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
@@ -120,15 +141,32 @@ namespace Cannonball
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
                 {
-                    ship.Velocity += ship.Forward;
+                    ship.ThrustersOn(ship.Forward);
                 });
             inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
                 {
-                    ship.Velocity -= ship.Forward;
+                     ship.ThrustersOn(-ship.Forward);
                 });
+            inputSystem.RegisterKeyReleasedAction(Keys.Space, () =>
+                {
+                    ship.ToggleEngines();
+                });
+            
+            inputSystem.RegisterKeyReleasedAction(Keys.Add, () =>
+                {
+                    var ship = ships[CurrentlyFollowed++];
+                    this.followCam = new FollowCamera(camera, ship);
+                });
+            inputSystem.RegisterKeyReleasedAction(Keys.Subtract, () =>
+            {
+                var ship = ships[CurrentlyFollowed--];
+                this.followCam = new FollowCamera(camera, ship);
+            });
 
             Services.AddService(typeof(ICamera), camera);
             Services.AddService(typeof(InputSystem), inputSystem);
+
+            networkClient = new TcpClientNetworkHost();
 
             base.Initialize();
         }
@@ -139,6 +177,8 @@ namespace Cannonball
         /// </summary>
         protected override void LoadContent()
         {
+            networkClient.Start();
+            
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             this.Services.AddService(typeof(SpriteBatch), spriteBatch);
@@ -150,8 +190,13 @@ namespace Cannonball
             // TODO: use this.Content to load your game content here
             CreateSpheres();
 
-            ship = new Ship(this);
+            //for testing multi ship environment
+            for (int i = 0; i < 19; i++)
+                ships.Add(new Ship(this));
+
+            ships.Add(new Ship(this, true));
             followCam = new FollowCamera(camera, ship);
+            CurrentlyFollowed = ships.IndexOf(ship);
 
             lightningTexture = new LightningTexture(GraphicsDevice, 50, 100);
 
@@ -285,7 +330,10 @@ namespace Cannonball
             }
 
             //cube.Draw(Matrix.Identity, camera.ViewMatrix, camera.ProjectionMatrix);
-            ship.Draw(gameTime);
+            foreach (var ship in ships)
+            {
+                ship.Draw(gameTime);
+            }            
             pSys.Draw(gameTime);
 
             GraphicsDevice.SetRenderTarget(null);

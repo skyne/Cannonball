@@ -10,9 +10,18 @@ using System.Text;
 
 namespace Cannonball.GameObjects
 {
+    public enum EngineState
+    {
+        On,
+        Stopping,
+        Off,
+    }
     public class Ship : DrawableGameComponent, IWorldObject
     {
+        public bool IsPlayerControlled { get; private set; }
         public ICamera Camera { get; set; }
+
+        private EngineState Engine;
 
         private ComplexObject obj;
         public ComplexObject Mesh
@@ -32,7 +41,7 @@ namespace Cannonball.GameObjects
             }
         }
 
-        public Ship(Game game)
+        public Ship(Game game, bool isPlayerShip = false)
             : base(game)
         {
             Camera = (ICamera)game.Services.GetService(typeof(ICamera));
@@ -48,6 +57,8 @@ namespace Cannonball.GameObjects
             thrusters = new List<Thruster>(11);
             thrusters.Add(new Thruster(this, -Vector3.UnitX + 0.3f * Vector3.UnitZ, -obj.Forward));
             thrusters.Add(new Thruster(this, Vector3.UnitX + 0.3f * Vector3.UnitZ, -obj.Forward));
+            IsPlayerControlled = isPlayerShip;
+            Engine = EngineState.Off;
         }
 
         public void Turn(float horizontalAngle, float verticalAngle)
@@ -66,24 +77,40 @@ namespace Cannonball.GameObjects
             }
         }
 
+        public void ToggleEngines()
+        {
+            if (Engine == EngineState.On)
+                Engine = EngineState.Stopping;
+            else
+                Engine = EngineState.On;
+        }
+
         public void ThrustersOn(Vector3 direction)
         {
-            
+            if (Engine == EngineState.On && Math.Abs(this.Velocity.Length()) <= 2f)
+                this.Velocity += direction;
         }
 
         public void ThrustersOff()
         {
-            
+
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (this.Velocity.Length() < 0.0001f)
+                this.Velocity = Vector3.Zero;
+
+            if (Engine == EngineState.Stopping)
+                this.Velocity *= 0.992f;
+
             obj.Update(gameTime);
 
             foreach (var thruster in thrusters)
             {
                 thruster.Update(gameTime);
             }
+
         }
 
         public override void Draw(GameTime gameTime)
