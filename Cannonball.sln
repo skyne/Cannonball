@@ -7,15 +7,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball", "Cannonball\Ca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Engine", "Cannonball.Engine\Cannonball.Engine.csproj", "{483274A5-69F7-4444-B8BC-8C2723D5FEFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Canonball.Network.Client", "Canonball.Network\Canonball.Network.Client.csproj", "{7193218E-31DF-4C46-B0FA-F69A6822E3B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Network.Client", "Canonball.Network\Cannonball.Network.Client.csproj", "{7193218E-31DF-4C46-B0FA-F69A6822E3B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Network.Packets", "Cannonball.Network.Packets\Cannonball.Network.Packets.csproj", "{6929602D-840A-43F2-9BA4-D9A852DC2ED0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannonBall.Network.Server", "CannonBall.Network.Server\CannonBall.Network.Server.csproj", "{0FD4CD0E-C00A-4E53-91E4-88259161DB6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Network.Server", "CannonBall.Network.Server\Cannonball.Network.Server.csproj", "{0FD4CD0E-C00A-4E53-91E4-88259161DB6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Network.Shared", "Cannonball.Network.Shared\Cannonball.Network.Shared.csproj", "{BA26F7FE-7D4D-416E-8C17-157E9DE57AB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Server", "Cannonball.Server\Cannonball.Server.csproj", "{4CC80D35-D6EE-4209-B49A-451D42AF644D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Client.Shared", "Cannonball.Client.Shared\Cannonball.Client.Shared.csproj", "{3CD160E2-906F-44F5-91C3-11452265F854}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Shared", "Cannonball.Shared\Cannonball.Shared.csproj", "{125633C7-95B3-444B-89D1-D5BDA8B9A166}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cannonball.Server.Shared", "Cannonball.Server.Shared.cs\Cannonball.Server.Shared.csproj", "{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +105,36 @@ Global
 		{4CC80D35-D6EE-4209-B49A-451D42AF644D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4CC80D35-D6EE-4209-B49A-451D42AF644D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4CC80D35-D6EE-4209-B49A-451D42AF644D}.Release|x86.ActiveCfg = Release|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3CD160E2-906F-44F5-91C3-11452265F854}.Release|x86.ActiveCfg = Release|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{125633C7-95B3-444B-89D1-D5BDA8B9A166}.Release|x86.ActiveCfg = Release|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BD3E8D5B-880E-4CBE-B828-3C9D8B4D9DE8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

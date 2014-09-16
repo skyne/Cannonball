@@ -20,8 +20,12 @@ using Cannonball.Engine.Graphics;
 using Cannonball.Engine.Graphics.Particles;
 using System.Linq;
 using Cannonball.Engine.Utils.Diagnostics;
-using Cannonball.GameObjects;
+using Cannonball.Shared.GameObjects;
 using DFNetwork.Tcp.Client;
+using DFNetwork.Framework.Client;
+using Cannonball.Client.Shared.Network;
+using System.Threading;
+using Cannonball.Network.Shared.Session;
 #endregion
 
 namespace Cannonball
@@ -33,8 +37,6 @@ namespace Cannonball
     {
         private const int maximumNumberOfSpheres = 1000;
         const float worldSize = 500f;
-
-        TcpClientNetworkHost networkClient;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -63,7 +65,9 @@ namespace Cannonball
         InputSystem inputSystem;
         //ComplexObject cube;
         List<Ship> ships;
-        Ship ship { get { return ships.Single(o => o.IsPlayerControlled); } }
+        Ship ship { get { return ships.FirstOrDefault(o => o.IsPlayerControlled); } }
+
+        ICannonballClientSession clientSession;
 
         ParticleSettings pSet;
         ParticleSystem pSys;
@@ -163,10 +167,13 @@ namespace Cannonball
                 this.followCam = new FollowCamera(camera, ship);
             });
 
+            var networkClient = new TcpClientNetworkHost();
+
             Services.AddService(typeof(ICamera), camera);
             Services.AddService(typeof(InputSystem), inputSystem);
+            Services.AddService(typeof(TcpClientNetworkHost), networkClient);
 
-            networkClient = new TcpClientNetworkHost();
+            
 
             base.Initialize();
         }
@@ -177,6 +184,7 @@ namespace Cannonball
         /// </summary>
         protected override void LoadContent()
         {
+            var networkClient = (TcpClientNetworkHost)Services.GetService(typeof(TcpClientNetworkHost));
             networkClient.Start();
             
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -191,10 +199,10 @@ namespace Cannonball
             CreateSpheres();
 
             //for testing multi ship environment
-            for (int i = 0; i < 19; i++)
-                ships.Add(new Ship(this));
+            //for (int i = 0; i < 19; i++)
+            //    ships.Add(new Ship(this));
 
-            ships.Add(new Ship(this, true));
+            //ships.Add(new Ship(this, true));
             followCam = new FollowCamera(camera, ship);
             CurrentlyFollowed = ships.IndexOf(ship);
 
@@ -234,7 +242,20 @@ namespace Cannonball
             //pEmi = new ParticleEmitter(pSys) { Position = new Vector3(Vector2.One, 0), ParticlesPerSecond = 10 };
             #endregion
 
+            clientSession = ((networkClient.SessionManager as ClientSessionManager).Session as ICannonballClientSession);
+
+            clientSession.NewShipAdded += clientSession_NewShipAdded;
+
+            ////thefuck!?
+            //while (clientSession.Status == SessionStatus.Stranger )
+            //    Thread.Sleep(10);
+
             base.LoadContent();
+        }
+
+        void clientSession_NewShipAdded(object sender, Ship e)
+        {
+            ships.Add(e);
         }
 
         private void CreateSpheres()

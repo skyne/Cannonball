@@ -1,31 +1,41 @@
 ﻿using Cannonball.Network.Packets;
 using Cannonball.Network.Packets.Client;
 using Cannonball.Network.Packets.Server;
-using CannonBall.Network.Server.Session;
-using Canonball.Network.Server.PacketHandlers;
+using Cannonball.Network.Server.Session;
+using Cannonball.Network.Server.PacketHandlers;
 using DFNetwork.Framework.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 
-namespace CannonBall.Network.Server.PacketHandlers
+namespace Cannonball.Network.Server.PacketHandlers
 {
-    class CHelloHandler : ClientPacketHandler
+    class CHelloHandler : ClientPacketHandler<CHello>
     {
+        Logger logger = LogManager.GetCurrentClassLogger();
         public CHelloHandler(IClientSession session)
             : base((ClientSession)session)
         {
         }
-        public override void Handle(Packet packet)
+        public override void Handle(CHello packet)
         {
-            var message = packet.ReadString();
-
-            if (message.Contains("Cannonball"))
+            logger.Trace("Start CHello handler...");
+            if (packet.ProtocolVersion == "Cannonball")
+            {
+                logger.Trace("Protocol version OK on: "+Session.SessionId);
                 this.Session.SetStatus(Cannonball.Network.Shared.Session.SessionStatus.Guest);
+                this.Session.SendPacket(new SHello() { HelloResponse = HelloResponse.Ok });
+            }
             else
-                this.Session.SendPacket(new SHello(HelloResponse.Outdated));
+            {
+                logger.Trace("Unknown protocol requested by: " + Session.SessionId);
+                this.Session.SendPacket(new SHello() { HelloResponse = HelloResponse.Outdated });
+            }
+
+            logger.Trace("End CHello handler...");
         }
     }
 }

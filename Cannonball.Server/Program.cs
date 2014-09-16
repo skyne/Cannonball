@@ -1,4 +1,7 @@
-﻿using DFNetwork.Tcp.Server;
+﻿using Cannonball.Server.Game;
+using Cannonball.Server.Shared.Game;
+using Castle.MicroKernel.Registration;
+using DFNetwork.Tcp.Server;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -16,6 +19,8 @@ namespace Cannonball.Server
             logger.Info("Starting up...");
 
             var host = new TcpServerNetworkHost();
+            host.DependencyContainer.Register(Component.For<IEntityManager>().ImplementedBy<EntityManager>().LifestyleTransient());
+            host.DependencyContainer.Register(Component.For<IWorld>().ImplementedBy<World>().LifestyleSingleton());
             host.Start();
 
             Console.ReadKey();

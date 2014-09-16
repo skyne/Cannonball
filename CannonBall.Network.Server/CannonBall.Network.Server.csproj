@@ -7,8 +7,8 @@
     <ProjectGuid>{0FD4CD0E-C00A-4E53-91E4-88259161DB6C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CannonBall.Network.Server</RootNamespace>
-    <AssemblyName>CannonBall.Network.Server</AssemblyName>
+    <RootNamespace>Cannonball.Network.Server</RootNamespace>
+    <AssemblyName>Cannonball.Network.Server</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="CannonballServerPlugin.cs" />
     <Compile Include="PacketHandlers\CHelloHandler.cs" />
+    <Compile Include="PacketHandlers\CRequestEnterWorldHandler.cs" />
     <Compile Include="PacketHandlers\PacketHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol\ServerSideProtocol.cs" />
@@ -86,6 +87,14 @@
       <Project>{ba26f7fe-7d4d-416e-8c17-157e9de57ab1}</Project>
       <Name>Cannonball.Network.Shared</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Server.Shared.cs\Cannonball.Server.Shared.csproj">
+      <Project>{bd3e8d5b-880e-4cbe-b828-3c9d8b4d9de8}</Project>
+      <Name>Cannonball.Server.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Shared\Cannonball.Shared.csproj">
+      <Project>{125633c7-95b3-444b-89d1-d5bda8b9a166}</Project>
+      <Name>Cannonball.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

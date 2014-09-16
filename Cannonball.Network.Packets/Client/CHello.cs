@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Cannonball.Network.Packets.Client
 {
-    [PacketHeader(0x0001)]
-    public class CHello : ClientPacket
+    [Serializable]
+    public class CHello : IClientPacket
     {
-        public CHello(string protocolVersion)
-        {
-            this.AppendTo(protocolVersion);
-        }
+        public string ProtocolVersion { get; set; }
     }
 }

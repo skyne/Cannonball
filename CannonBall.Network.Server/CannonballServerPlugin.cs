@@ -1,5 +1,5 @@
-﻿using CannonBall.Network.Server.Protocol;
-using CannonBall.Network.Server.Session;
+﻿using Cannonball.Network.Server.Protocol;
+using Cannonball.Network.Server.Session;
 using Castle.MicroKernel.Registration;
 using DFNetwork.Framework;
 using DFNetwork.Framework.Protocol;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CannonBall.Network.Server
+namespace Cannonball.Network.Server
 {
     [Export(typeof(IPlugin))]
     public class CannonballServerPlugin : IPlugin

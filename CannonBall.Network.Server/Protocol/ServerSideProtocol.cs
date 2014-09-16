@@ -1,6 +1,7 @@
 ﻿using Cannonball.Network.Packets;
-using Canonball.Network.Server.PacketHandlers;
-using Canonball.Network.Shared.PacketHandlers;
+using Cannonball.Network.Server.PacketHandlers;
+using Cannonball.Network.Server.Session;
+using Cannonball.Network.Shared.PacketHandlers;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using DFNetwork.Framework;
@@ -11,14 +12,16 @@ using DFNetwork.Framework.Transport;
 using System;
 using System.Linq;
 
-namespace CannonBall.Network.Server.Protocol
+namespace Cannonball.Network.Server.Protocol
 {
     public class ServerSideProtocol : IServerSideProtocol
     {
+        private ClientSession session;
+
         public IClientSession Session
         {
-            get;
-            set;
+            get { return session; }
+            set { session = (ClientSession)value; }
         }
 
         private ServerSessionManager sessionManager;
@@ -33,25 +36,23 @@ namespace CannonBall.Network.Server.Protocol
 
         public ServerSideProtocol(WindsorContainer container)
         {
-            this.MessageReceived = Recieved;
             this.hostContainer = container;
             this.protocolContainer = new WindsorContainer();
-
             HandlerRegistrator.Register(protocolContainer);
 
-            this.sessionManager = container.Resolve<SessionManager>() as ServerSessionManager;          
+            this.sessionManager = container.Resolve<SessionManager>() as ServerSessionManager;
+            this.MessageReceived = Recieved;
         }
 
         public void Initialized()
         {
+            session.protocolContainer = protocolContainer;
             protocolContainer.Register(Component.For<IClientSession>().Instance(Session).LifestyleSingleton());
         }
 
         private void Recieved(IChannel channel, byte[] message)
         {
-            var packet = PacketFactory.CreatePacket(message);
-            var handler = protocolContainer.Resolve<PacketHandler>(packet.Type);
-            handler.Handle(packet);
+            this.session.Recieve(message);
         }
     }
 }

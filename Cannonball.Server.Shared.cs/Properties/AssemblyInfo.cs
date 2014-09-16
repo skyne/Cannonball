@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Cannonball.Network")]
+[assembly: AssemblyTitle("Cannonball.Server.Shared.cs")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Cannonball.Network")]
+[assembly: AssemblyProduct("Cannonball.Server.Shared.cs")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("07fe01d8-95ee-4cd3-95da-b7beb49b8275")]
+[assembly: Guid("03d80e2a-7f5e-4196-8852-2b11c2e52024")]
 
 // Version information for an assembly consists of the following four values:
 //

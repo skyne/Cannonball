@@ -1,5 +1,5 @@
-﻿using Canonball.Network.Client.Protocol;
-using Canonball.Network.Client.Session;
+﻿using Cannonball.Network.Client.Protocol;
+using Cannonball.Network.Client.Session;
 using Castle.MicroKernel.Registration;
 using DFNetwork.Framework;
 using DFNetwork.Framework.Protocol;
@@ -7,7 +7,7 @@ using DFNetwork.Framework.Session;
 using System;
 using System.ComponentModel.Composition;
 
-namespace Canonball.Network.Client
+namespace Cannonball.Network.Client
 {
     [Export(typeof(IPlugin))]
     public class CannonballClientPlugin : IPlugin

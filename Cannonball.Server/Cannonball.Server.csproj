@@ -50,6 +50,7 @@
     <Reference Include="DFNetwork.Tcp.Shared">
       <HintPath>..\packages\DFNetwork.Tcp.Shared.1.0.0.0\lib\net451\DFNetwork.Tcp.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -71,6 +72,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\EntityManager.cs" />
+    <Compile Include="Game\World.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -83,7 +86,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <ProjectReference Include="..\Cannonball.Engine\Cannonball.Engine.csproj">
+      <Project>{483274a5-69f7-4444-b8bc-8c2723d5fefc}</Project>
+      <Name>Cannonball.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Server.Shared.cs\Cannonball.Server.Shared.csproj">
+      <Project>{bd3e8d5b-880e-4cbe-b828-3c9d8b4d9de8}</Project>
+      <Name>Cannonball.Server.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Shared\Cannonball.Shared.csproj">
+      <Project>{125633c7-95b3-444b-89d1-d5bda8b9a166}</Project>
+      <Name>Cannonball.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

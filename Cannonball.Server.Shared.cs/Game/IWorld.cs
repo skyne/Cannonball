@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cannonball.Network.Packets.Server
+namespace Cannonball.Server.Shared.Game
 {
-    public interface IServerPacket : IPacket
+    public interface IWorld
     {
+        IEntityManager EntityManager { get; set; }
     }
 }

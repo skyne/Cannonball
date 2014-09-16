@@ -3,10 +3,16 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using DFNetwork.Framework.Session;
 using Cannonball.Network.Packets;
+using Cannonball.Network.Packets.Client;
 
-namespace Canonball.Network.Shared.PacketHandlers
+namespace Cannonball.Network.Shared.PacketHandlers
 {
-    public class PacketHandler
+    public interface IPacketHandler
+    {
+        void Handle(IPacket packet);
+    }
+
+    public class PacketHandler<T> : IPacketHandler where T: IPacket
     {
         protected IClientSession Session;
         public PacketHandler(IClientSession session)
@@ -14,9 +20,13 @@ namespace Canonball.Network.Shared.PacketHandlers
             this.Session = session;
         }
 
-        public virtual void Handle(Packet packet)
+        public virtual void Handle(T packet)
         {
             
+        }
+        public void Handle(IPacket packet)
+        {
+            this.Handle(packet);
         }
     }
 }

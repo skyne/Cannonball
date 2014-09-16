@@ -1,23 +1,37 @@
-﻿using Cannonball.Network.Packets.Client;
+﻿using Cannonball.Client.Shared.Network;
+using Cannonball.Network.Packets.Client;
+using Cannonball.Network.Packets.Server;
 using Cannonball.Network.Shared.Session;
+using Cannonball.Shared.GameObjects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
-namespace Canonball.Network.Client.Session
+namespace Cannonball.Network.Client.Session
 {
-    public class ClientSession : BaseSharedClientSession
+    public class ClientSession : BaseSharedClientSession, ICannonballClientSession
     {
-        public ClientSession() : base()
+        public ClientSession()
+            : base()
+        {
+        }
+
+        public void Send(IClientPacket packet)
+        {
+            base.Send(packet);
+        }
+
+        public void Update()
         {
 
         }
-        
-        public void Send(ClientPacket packet)
+
+        public event EventHandler<Ship> NewShipAdded;
+
+        public void AddShip(Ship ship)
         {
-            base.GetChannel().Send(packet.GetBytes());
+            if (NewShipAdded != null)
+                NewShipAdded(this, ship);
         }
     }
 }

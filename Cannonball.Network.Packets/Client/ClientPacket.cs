@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Cannonball.Network.Packets.Client
 {
-    public class ClientPacket : Packet
+    public interface IClientPacket : IPacket
     {
+
     }
 }

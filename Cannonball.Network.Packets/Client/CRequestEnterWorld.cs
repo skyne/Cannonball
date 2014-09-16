@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cannonball.Network.Packets.Server
+namespace Cannonball.Network.Packets.Client
 {
-    public interface IServerPacket : IPacket
+    [Serializable]
+    public class CRequestEnterWorld : IClientPacket
     {
     }
 }

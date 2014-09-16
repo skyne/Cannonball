@@ -1,13 +1,16 @@
 ﻿using Cannonball.Network.Packets;
-using CannonBall.Network.Server.PacketHandlers;
-using CannonBall.Network.Server.Session;
-using Canonball.Network.Shared.PacketHandlers;
+using Cannonball.Network.Packets.Client;
+using Cannonball.Network.Server.PacketHandlers;
+using Cannonball.Network.Server.Session;
+using Cannonball.Network.Shared.PacketHandlers;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using System.Linq;
+using System;
 
-namespace Canonball.Network.Server.PacketHandlers
+namespace Cannonball.Network.Server.PacketHandlers
 {
-    public class ClientPacketHandler : PacketHandler
+    public class ClientPacketHandler<T> : PacketHandler<T> where T: IClientPacket
     {
         protected new ClientSession Session;
 
@@ -21,7 +24,14 @@ namespace Canonball.Network.Server.PacketHandlers
     {
         public static void Register(WindsorContainer container)
         {
-            container.Register(Component.For<PacketHandler>().Named("CHello").ImplementedBy<CHelloHandler>().LifestyleTransient());
+            var types = typeof(HandlerRegistrator).Assembly.GetTypes();
+            var handlers = types.Where(t => t.BaseType.HasInterface(typeof(IPacketHandler)) && !t.IsGenericType);
+
+            foreach (var handler in handlers)
+            {
+                var handlerType = handler.BaseType.BaseType;
+                container.Register(Component.For(handlerType).ImplementedBy(handler).LifestyleTransient());
+            }
         }
     }
 }

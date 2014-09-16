@@ -7,8 +7,8 @@
     <ProjectGuid>{7193218E-31DF-4C46-B0FA-F69A6822E3B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Canonball.Network.Client</RootNamespace>
-    <AssemblyName>Canonball.Network.Client</AssemblyName>
+    <RootNamespace>Cannonball.Network.Client</RootNamespace>
+    <AssemblyName>Cannonball.Network.Client</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -49,6 +49,7 @@
       <HintPath>..\packages\DFNetwork.Tcp.Shared.1.0.0.0\lib\net451\DFNetwork.Tcp.Shared.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
       <Private>False</Private>
@@ -77,7 +78,9 @@
   <ItemGroup>
     <Compile Include="CannonballClientPlugin.cs" />
     <Compile Include="PacketHandlers\PacketHandler.cs" />
+    <Compile Include="PacketHandlers\SAddNewShipHandler.cs" />
     <Compile Include="PacketHandlers\SHelloHandler.cs" />
+    <Compile Include="PacketHandlers\SObjectListUpdateHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol\ClientSideProtocol.cs" />
     <Compile Include="Session\ClientSession.cs" />
@@ -86,6 +89,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cannonball.Engine\Cannonball.Engine.csproj">
+      <Project>{483274a5-69f7-4444-b8bc-8c2723d5fefc}</Project>
+      <Name>Cannonball.Engine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cannonball.Network.Packets\Cannonball.Network.Packets.csproj">
       <Project>{6929602d-840a-43f2-9ba4-d9a852dc2ed0}</Project>
       <Name>Cannonball.Network.Packets</Name>
@@ -93,6 +100,14 @@
     <ProjectReference Include="..\Cannonball.Network.Shared\Cannonball.Network.Shared.csproj">
       <Project>{ba26f7fe-7d4d-416e-8c17-157e9de57ab1}</Project>
       <Name>Cannonball.Network.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Client.Shared\Cannonball.Client.Shared.csproj">
+      <Project>{3cd160e2-906f-44f5-91c3-11452265f854}</Project>
+      <Name>Cannonball.Client.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Shared\Cannonball.Shared.csproj">
+      <Project>{125633c7-95b3-444b-89d1-d5bda8b9a166}</Project>
+      <Name>Cannonball.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

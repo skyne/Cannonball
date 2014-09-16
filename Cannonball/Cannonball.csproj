@@ -54,8 +54,6 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameObjects\Ship.cs" />
-    <Compile Include="GameObjects\Thruster.cs" />
     <Compile Include="LightningTestGame.cs" />
     <Compile Include="LSystemTestGame.cs" />
     <Compile Include="ParticleTestGame.cs" />
@@ -113,6 +111,18 @@
     <ProjectReference Include="..\Cannonball.Engine\Cannonball.Engine.csproj">
       <Project>{483274a5-69f7-4444-b8bc-8c2723d5fefc}</Project>
       <Name>Cannonball.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Network.Shared\Cannonball.Network.Shared.csproj">
+      <Project>{ba26f7fe-7d4d-416e-8c17-157e9de57ab1}</Project>
+      <Name>Cannonball.Network.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Client.Shared\Cannonball.Client.Shared.csproj">
+      <Project>{3cd160e2-906f-44f5-91c3-11452265f854}</Project>
+      <Name>Cannonball.Client.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Shared\Cannonball.Shared.csproj">
+      <Project>{125633c7-95b3-444b-89d1-d5bda8b9a166}</Project>
+      <Name>Cannonball.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

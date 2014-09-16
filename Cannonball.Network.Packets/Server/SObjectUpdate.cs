@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Cannonball.Network.Packets.Server
 {
-    public interface IServerPacket : IPacket
+    public class SObjectUpdate : IServerPacket
     {
+        public SObjectUpdate()
+        {
+
+        }
     }
 }

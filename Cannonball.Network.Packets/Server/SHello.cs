@@ -13,17 +13,9 @@ namespace Cannonball.Network.Packets.Server
         Banned,
     }
     
-    [PacketHeader(0x0002)]
-    public class SHello : ServerPacket
+    [Serializable]
+    public class SHello : IServerPacket
     {
-        public SHello()
-        {
-
-        }
-
-        public SHello(HelloResponse response)
-        {
-            this.AppendTo((int)response);
-        }
+        public HelloResponse HelloResponse { get; set; }
     }
 }

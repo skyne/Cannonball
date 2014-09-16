@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Canonball.Network.Shared.Exceptions
+namespace Cannonball.Network.Shared.Exceptions
 {
     public class PacketInWrongSessionStatusException : Exception
     {
