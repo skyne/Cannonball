@@ -1,6 +1,7 @@
 ﻿using Cannonball.Network.Packets.Server;
 using Cannonball.Network.Shared.Session;
 using Cannonball.Server.Shared.Game;
+using DFNetwork.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,11 +16,16 @@ namespace Cannonball.Network.Server.Session
     {
         public IWorld World { get; private set; }
 
-        public ClientSession(IWorld world)
+        private SessionManager manager;
+
+        public ClientSession(IWorld world, SessionManager manager)
             : base()
         {
+            this.manager = manager;
             this.World = world;
+            this.World.EntityManager.OnNewEntityAdded += EntityManager_OnNewEntityAdded;
         }
+        
         public void SetStatus(SessionStatus status)
         {
             if (this.Status == SessionStatus.Stranger && status == SessionStatus.Guest)
@@ -31,6 +37,11 @@ namespace Cannonball.Network.Server.Session
         public void SendPacket(IServerPacket packet)
         {
             base.Send(packet);
+        }
+
+        void EntityManager_OnNewEntityAdded(object sender, Cannonball.Shared.GameObjects.IShip e)
+        {
+            this.SendPacket(new SAddNewShip() { NewShip = e });
         }
     }
 }

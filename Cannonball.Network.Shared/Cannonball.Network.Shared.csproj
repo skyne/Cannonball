@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,6 +46,12 @@
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Polenter.SharpSerializer">
+      <HintPath>..\packages\SharpSerializer.2.20\lib\net20\Polenter.SharpSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="SCP.Common">
       <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Common.dll</HintPath>

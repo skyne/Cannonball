@@ -10,6 +10,6 @@ namespace Cannonball.Network.Packets.Server
     [Serializable]
     public class SAddNewShip : IServerPacket
     {
-        public Ship NewShip { get; set; }
+        public IShip NewShip { get; set; }
     }
 }

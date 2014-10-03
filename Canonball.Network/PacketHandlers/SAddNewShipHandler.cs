@@ -18,7 +18,7 @@ namespace Cannonball.Network.Client.PacketHandlers
         public SAddNewShipHandler(IClientSession session)
             : base((ClientSession)session)
         {
-
+            this.session = (ICannonballClientSession)session;
         }
 
         public override void Handle(SAddNewShip packet)

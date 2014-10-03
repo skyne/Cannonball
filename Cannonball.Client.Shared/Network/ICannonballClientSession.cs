@@ -14,8 +14,8 @@ namespace Cannonball.Client.Shared.Network
         SessionStatus Status
         { get; set; }
 
-        event EventHandler<Ship> NewShipAdded;
-        void AddShip(Ship ship);
+        event EventHandler<IShip> NewShipAdded;
+        void AddShip(IShip ship);
 
         void Update();
     }

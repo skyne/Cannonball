@@ -10,6 +10,7 @@ using System.IO;
 using Cannonball.Network.Packets;
 using Castle.Windsor;
 using Cannonball.Network.Shared.PacketHandlers;
+using ProtoBuf;
 
 namespace Cannonball.Network.Shared.Session
 {
@@ -28,12 +29,12 @@ namespace Cannonball.Network.Shared.Session
 
         public WindsorContainer protocolContainer { get; set; }
 
-        protected BinaryFormatter serializer;
+        protected Polenter.Serialization.SharpSerializer serializer;
 
         public BaseSharedClientSession()
         {
-            serializer = new BinaryFormatter();
-            serializer.AssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+            serializer = new Polenter.Serialization.SharpSerializer();
+            //serializer.Binder = new AllowAllAssemblyVersionsDeserializationBinder();
         }
 
         public void Send(IPacket packet)
@@ -41,18 +42,34 @@ namespace Cannonball.Network.Shared.Session
             byte[] buffer;
             using (var stream = new MemoryStream())
             {
-                serializer.Serialize(stream, packet);
+                serializer.Serialize( packet, stream);
                 buffer = stream.ToArray();
             }
-            base.GetChannel().Send(buffer);
+            base.Channel.Send(buffer);
         }
 
         public void Recieve(byte[] message)
         {
+            serializer = new Polenter.Serialization.SharpSerializer();
             IPacket packet = (IPacket)serializer.Deserialize(new MemoryStream(message));
             var handlerType = typeof(PacketHandler<>).MakeGenericType(packet.GetType());
             var handler = (IPacketHandler)protocolContainer.Resolve(handlerType);
-            handler.Handle(packet);
+            handler.HandlePacket(packet);
+        }
+    }
+
+    sealed class AllowAllAssemblyVersionsDeserializationBinder : System.Runtime.Serialization.SerializationBinder
+    {
+        public override Type BindToType(string assemblyName, string typeName)
+        {
+            Type typeToDeserialize = null;
+
+            var ass = AppDomain.CurrentDomain.GetAssemblies().First(o => o.FullName == assemblyName);
+
+            // Get the type using the typeName and assemblyName
+            typeToDeserialize = ass.GetType(typeName);
+
+            return typeToDeserialize;
         }
     }
 }

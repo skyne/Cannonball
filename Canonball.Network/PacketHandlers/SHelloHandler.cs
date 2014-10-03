@@ -26,6 +26,8 @@ namespace Cannonball.Network.Client.PacketHandlers
             if (packet.HelloResponse == HelloResponse.Ok)
                 base.Session.Status = SessionStatus.Guest;
 
+            base.Session.Send(new Cannonball.Network.Packets.Client.CRequestEnterWorld());
+
             logger.Trace("End SHello handler...");
         }
     }

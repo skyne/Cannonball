@@ -4,6 +4,7 @@ using Castle.MicroKernel.Registration;
 using DFNetwork.Framework;
 using DFNetwork.Framework.Protocol;
 using DFNetwork.Framework.Session;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -16,6 +17,8 @@ namespace Cannonball.Network.Server
     [Export(typeof(IPlugin))]
     public class CannonballServerPlugin : IPlugin
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private bool isInitialized;
         public bool IsInitialized
         {
@@ -34,9 +37,16 @@ namespace Cannonball.Network.Server
 
         public void Initialize(NetworkHost host)
         {
-            this.isInitialized = true;
-            host.DependencyContainer.Register(Component.For<IClientSession>().ImplementedBy<ClientSession>().LifestyleTransient());
+            logger.Info("Initializing plugin: {0}", this.GetName());
+
+            logger.Debug("DI: Registering <ClientSession> for default <IClientSession>");
+            host.DependencyContainer.Register(Component.For<IClientSession>().ImplementedBy<ClientSession>());
+            logger.Debug("DI: Registering <ServerSideProtocol> for default <IServerProtocol>");
             host.DependencyContainer.Register(Component.For<IServerSideProtocol>().ImplementedBy<ServerSideProtocol>().LifestyleTransient());
+
+            logger.Info("Initialized plugin: {0}", this.GetName());
+
+            this.isInitialized = true;
         }
     }
 }

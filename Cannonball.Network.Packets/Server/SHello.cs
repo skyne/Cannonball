@@ -12,7 +12,7 @@ namespace Cannonball.Network.Packets.Server
         Outdated,
         Banned,
     }
-    
+
     [Serializable]
     public class SHello : IServerPacket
     {

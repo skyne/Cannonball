@@ -11,13 +11,13 @@ namespace Cannonball.Server.Game
 {
     class EntityManager : IEntityManager
     {
-        private List<Ship> entities = new List<Ship>();
+        private List<IShip> entities = new List<IShip>();
 
-        public IEnumerable<Ship> Entities { get { return entities; } }
+        public IEnumerable<IShip> Entities { get { return entities; } }
 
-        public event EventHandler<Ship> OnNewEntityAdded;
+        public event EventHandler<IShip> OnNewEntityAdded;
 
-        public void AddEntity(Ship entity)
+        public void AddEntity(IShip entity)
         {
             entities.Add(entity);
 

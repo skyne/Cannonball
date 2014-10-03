@@ -9,8 +9,8 @@ namespace Cannonball.Server.Shared.Game
 {
     public interface IEntityManager
     {
-        void AddEntity(Ship entity);
-        System.Collections.Generic.IEnumerable<Ship> Entities { get; }
-        event EventHandler<Ship> OnNewEntityAdded;
+        void AddEntity(IShip entity);
+        System.Collections.Generic.IEnumerable<IShip> Entities { get; }
+        event EventHandler<IShip> OnNewEntityAdded;
     }
 }

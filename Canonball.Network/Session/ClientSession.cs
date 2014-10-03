@@ -26,9 +26,9 @@ namespace Cannonball.Network.Client.Session
 
         }
 
-        public event EventHandler<Ship> NewShipAdded;
+        public event EventHandler<IShip> NewShipAdded;
 
-        public void AddShip(Ship ship)
+        public void AddShip(IShip ship)
         {
             if (NewShipAdded != null)
                 NewShipAdded(this, ship);

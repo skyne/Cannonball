@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -78,6 +79,11 @@
     <Compile Include="Session\ClientSession.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cannonball.Engine\Cannonball.Engine.csproj">
+      <Project>{483274a5-69f7-4444-b8bc-8c2723d5fefc}</Project>
+      <Name>Cannonball.Engine</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Cannonball.Network.Packets\Cannonball.Network.Packets.csproj">
       <Project>{6929602d-840a-43f2-9ba4-d9a852dc2ed0}</Project>
       <Name>Cannonball.Network.Packets</Name>

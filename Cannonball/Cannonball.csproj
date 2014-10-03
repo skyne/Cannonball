@@ -54,6 +54,8 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameObjects\Ship.cs" />
+    <Compile Include="GameObjects\Thruster.cs" />
     <Compile Include="LightningTestGame.cs" />
     <Compile Include="LSystemTestGame.cs" />
     <Compile Include="ParticleTestGame.cs" />

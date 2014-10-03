@@ -9,7 +9,7 @@ namespace Cannonball.Network.Shared.PacketHandlers
 {
     public interface IPacketHandler
     {
-        void Handle(IPacket packet);
+        void HandlePacket(IPacket packet);
     }
 
     public class PacketHandler<T> : IPacketHandler where T: IPacket
@@ -24,9 +24,9 @@ namespace Cannonball.Network.Shared.PacketHandlers
         {
             
         }
-        public void Handle(IPacket packet)
+        public void HandlePacket(IPacket packet)
         {
-            this.Handle(packet);
+            this.Handle((T)packet);
         }
     }
 }

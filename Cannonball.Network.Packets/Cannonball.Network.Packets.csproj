@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="SCP.Common">
       <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Common.dll</HintPath>
       <Private>False</Private>
