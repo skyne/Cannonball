@@ -1,5 +1,6 @@
 ﻿using Cannonball.Network.Packets.Client;
 using Cannonball.Network.Server.Session;
+using Cannonball.Server.Shared.GameObjects;
 using Cannonball.Shared.GameObjects;
 using DFNetwork.Framework.Session;
 using NLog;
@@ -24,10 +25,7 @@ namespace Cannonball.Network.Server.PacketHandlers
 
             logger.Debug("Client {0} requests entering world.", Session.SessionId);
 
-            this.Session.World.EntityManager.AddEntity(new NetShip()
-                {
-                    IsPlayerControlled = true              
-                });
+            this.Session.World.EntityManager.AddEntity(Ship.CreateNew(this.Session.SessionId));
 
             logger.Trace("End CRequestEnterWorldHandler handler...");
         }

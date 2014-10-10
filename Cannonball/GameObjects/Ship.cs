@@ -17,6 +17,8 @@ namespace Cannonball.GameObjects
         public bool IsPlayerControlled { get; private set; }
         public ICamera Camera { get; set; }
 
+        public string Name { get; set; }
+
         public EngineState Engine
         {
             get;
@@ -47,7 +49,7 @@ namespace Cannonball.GameObjects
             }
         }
 
-        public Ship(Game game, NetShip ship)
+        public Ship(Game game, DtoShip ship)
             : base(game)
         {
             Camera = (ICamera)game.Services.GetService(typeof(ICamera));
@@ -55,15 +57,14 @@ namespace Cannonball.GameObjects
             obj = new ComplexObject(GraphicsDevice, 1f, Primitives.Cube);
             obj.Position = ship.Position;
             obj.Velocity = ship.Velocity;
-            //obj.Forward = ship.Forward;
-            //obj.Up = ship.Up;
-            obj.Scale = new Vector3(obj.Scale.X, obj.Scale.Y, obj.Scale.Z * 3);
-            obj.Color = Color.Gray;
+            obj.Forward = ship.Forward;
+            obj.Up = ship.Up;
+            obj.Scale = ship.Scale;
+            obj.Color = ship.Color;
             obj.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = Vector3.UnitX });
             obj.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.5f, Primitives.Cube) { Position = -Vector3.UnitX });
             obj.PrimitiveObjects.Add(new Primitive(GraphicsDevice, 0.2f, Primitives.Cube) { Scale = new Vector3(2.0f, 0.2f, 0.2f) });
 
-            IsPlayerControlled = ship.IsPlayerControlled;
             Engine = ship.Engine;
         }
 
@@ -154,6 +155,12 @@ namespace Cannonball.GameObjects
             get { return obj.Up; }
             set { obj.Up = value; }
         }
+        public Color Color
+        {
+            get { return obj.Color; }
+            set { obj.Color = Color; }
+        }
+
         #endregion
     }
 }

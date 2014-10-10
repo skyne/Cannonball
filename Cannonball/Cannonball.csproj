@@ -76,15 +76,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DFNetwork.Framework.1.0.0.1\lib\net451\DFNetwork.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="DFNetwork.Tcp.Client, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DFNetwork.Tcp.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DFNetwork.Tcp.Client.1.0.0.1\lib\net451\DFNetwork.Tcp.Client.dll</HintPath>
+      <HintPath>..\packages\DFNetwork.Tcp.Client.1.0.0.0\lib\net451\DFNetwork.Tcp.Client.dll</HintPath>
     </Reference>
     <Reference Include="DFNetwork.Tcp.Shared">
       <HintPath>..\packages\DFNetwork.Tcp.Shared.1.0.0.0\lib\net451\DFNetwork.Tcp.Shared.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="NBug">
+      <HintPath>..\packages\NBug.1.2.2\lib\net40-client\NBug.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>

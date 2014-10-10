@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cannonball.Network.Packets.Server
+namespace Cannonball.Network.Packets.Common
 {
-    public class SObjectUpdate : IServerPacket
+    [Serializable]
+    public class PacketNotAllowed : IPacket
     {
-        public SObjectUpdate()
-        {
-
-        }
+        public string Packet { get; set; }
 
         public void Deserialize(byte[] bytes)
         {

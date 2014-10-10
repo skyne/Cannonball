@@ -13,9 +13,18 @@ namespace Cannonball.Network.Packets.Server
         Banned,
     }
 
-    [Serializable]
     public class SHello : IServerPacket
     {
         public HelloResponse HelloResponse { get; set; }
+
+        public void Deserialize(byte[] bytes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] Serialize()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

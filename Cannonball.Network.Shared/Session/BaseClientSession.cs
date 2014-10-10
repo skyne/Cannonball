@@ -11,6 +11,7 @@ using Cannonball.Network.Packets;
 using Castle.Windsor;
 using Cannonball.Network.Shared.PacketHandlers;
 using ProtoBuf;
+using Cannonball.Network.Shared.Serializer;
 
 namespace Cannonball.Network.Shared.Session
 {
@@ -19,6 +20,7 @@ namespace Cannonball.Network.Shared.Session
         Stranger,
         Guest,
         Authed,
+        Rejected,
     }
 
     public class BaseSharedClientSession : DFNetwork.Framework.BaseClientSession
@@ -29,29 +31,23 @@ namespace Cannonball.Network.Shared.Session
 
         public WindsorContainer protocolContainer { get; set; }
 
-        protected Polenter.Serialization.SharpSerializer serializer;
+        protected PacketSerializer serializer;
 
         public BaseSharedClientSession()
         {
-            serializer = new Polenter.Serialization.SharpSerializer();
+            serializer = new PacketSerializer();
             //serializer.Binder = new AllowAllAssemblyVersionsDeserializationBinder();
         }
 
         public void Send(IPacket packet)
         {
-            byte[] buffer;
-            using (var stream = new MemoryStream())
-            {
-                serializer.Serialize( packet, stream);
-                buffer = stream.ToArray();
-            }
+            byte[] buffer = serializer.Serialize(packet);
             base.Channel.Send(buffer);
         }
 
         public void Recieve(byte[] message)
         {
-            serializer = new Polenter.Serialization.SharpSerializer();
-            IPacket packet = (IPacket)serializer.Deserialize(new MemoryStream(message));
+            IPacket packet = (IPacket)serializer.Deserialize(message);
             var handlerType = typeof(PacketHandler<>).MakeGenericType(packet.GetType());
             var handler = (IPacketHandler)protocolContainer.Resolve(handlerType);
             handler.HandlePacket(packet);

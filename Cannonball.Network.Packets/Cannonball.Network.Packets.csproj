@@ -61,6 +61,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Client\CRequestEnterWorld.cs" />
+    <Compile Include="Common\PacketNotAllowed.cs" />
     <Compile Include="Packet.cs">
       <SubType>Code</SubType>
     </Compile>

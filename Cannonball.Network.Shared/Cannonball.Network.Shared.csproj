@@ -72,8 +72,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\PacketInWrongSessionStatusException.cs" />
+    <Compile Include="PacketFactory\PacketFactory.cs" />
+    <Compile Include="PacketFactory\PacketHeaderAttribute.cs" />
     <Compile Include="PacketHandlers\PacketHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializer\PacketSerializer.cs" />
     <Compile Include="Session\BaseClientSession.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -197,10 +197,10 @@ namespace Cannonball
 
         void clientSession_NewShipAdded(object sender, IShip e)
         {
-            var ship = new Ship(this, (NetShip)e);
+            var ship = new Ship(this, (DtoShip)e);
             ships.Add(ship);
 
-            if (e.IsPlayerControlled)
+            if (ship.IsPlayerControlled)
             {
                 myShip = ship;
                 //followCam.Target = myShip;

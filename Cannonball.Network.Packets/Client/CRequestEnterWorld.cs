@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace Cannonball.Network.Packets.Client
 {
-    [Serializable]
     public class CRequestEnterWorld : IClientPacket
     {
+
+        public void Deserialize(byte[] bytes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] Serialize()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

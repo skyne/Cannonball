@@ -27,12 +27,11 @@ namespace Cannonball.Network.Server.PacketHandlers
             {
                 logger.Trace("Protocol version OK on: "+Session.SessionId);
                 this.Session.SetStatus(Cannonball.Network.Shared.Session.SessionStatus.Guest);
-                this.Session.SendPacket(new SHello() { HelloResponse = HelloResponse.Ok });
             }
             else
             {
                 logger.Trace("Unknown protocol requested by: " + Session.SessionId);
-                this.Session.SendPacket(new SHello() { HelloResponse = HelloResponse.Outdated });
+                this.Session.SetStatus(Shared.Session.SessionStatus.Rejected);
             }
 
             logger.Trace("End CHello handler...");

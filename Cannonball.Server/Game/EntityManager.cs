@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Cannonball.Engine.GameObjects;
 using Cannonball.Shared.GameObjects;
 using Cannonball.Server.Shared.Game;
+using Cannonball.Server.Shared.GameObjects;
 
 namespace Cannonball.Server.Game
 {
-    class EntityManager : IEntityManager
+    public class EntityManager : IEntityManager
     {
-        private List<IShip> entities = new List<IShip>();
+        private List<Ship> entities = new List<Ship>();
 
         public IEnumerable<IShip> Entities { get { return entities; } }
 
@@ -19,10 +20,12 @@ namespace Cannonball.Server.Game
 
         public void AddEntity(IShip entity)
         {
-            entities.Add(entity);
+            var shipEntity = entity as Ship;
+            shipEntity.ObjectId = new Guid();
+            entities.Add((Ship)shipEntity);
 
             if (OnNewEntityAdded != null)
-                OnNewEntityAdded(this, entity);
+                OnNewEntityAdded(this, shipEntity);
         }
     }
 }
