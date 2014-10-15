@@ -48,8 +48,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Shaders\Effect1.fx">
-      <Name>Effect1</Name>
+    <Compile Include="Shaders\Billboarding.fx">
+      <Name>Billboarding</Name>
       <Importer>EffectImporter</Importer>
       <Processor>MGEffectProcessor</Processor>
     </Compile>
@@ -64,6 +64,20 @@
       <Name>BaseTexture</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shaders\Particles.fx">
+      <Name>Particles</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>MGEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\DebugFont.spritefont">
+      <Name>DebugFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>MGSpriteFontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

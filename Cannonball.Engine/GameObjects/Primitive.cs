@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Cannonball.Engine.GameObjects
 {
-    public class Primitive
+    public class Primitive : IWorldObject
     {
         private GeometricPrimitive primitive;
 
@@ -29,24 +29,56 @@ namespace Cannonball.Engine.GameObjects
             get { return new BoundingBox(-Scale, Scale); }
         }
 
-        public Primitive(GraphicsDevice graphics, float radius, bool cube = false)
+        public Primitive(GraphicsDevice graphics, float radius, GeometricPrimitive geometry)
         {
-            if (cube) primitive = Primitives.Cube;
-            else primitive = Primitives.Sphere;
+            primitive = geometry;
             Scale = new Vector3(radius);
             Up = Vector3.Up;
             Forward = Vector3.Forward;
         }
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void Draw(Matrix view, Matrix projection)
+        public virtual void Draw(Matrix view, Matrix projection)
         {
             primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateWorld(Position, Forward, Up)
                 , view, projection, Color);
         }
+
+        public virtual void Draw(Matrix parentWorld, Matrix view, Matrix projection)
+        {
+            primitive.Draw(Matrix.CreateScale(Scale) * Matrix.CreateWorld(Position, Forward, Up) * parentWorld
+                , view, projection, Color);
+        }
+
+        #region IWorldObject
+        Vector3 IWorldObject.Position
+        {
+            get { return this.Position; }
+        }
+
+        Vector3 IWorldObject.Velocity
+        {
+            get { return this.Velocity; }
+        }
+
+        Vector3 IWorldObject.Scale
+        {
+            get { return this.Scale; }
+        }
+
+        Vector3 IWorldObject.Forward
+        {
+            get { return this.Forward; }
+        }
+
+        Vector3 IWorldObject.Up
+        {
+            get { return this.Up; }
+        }
+        #endregion
     }
 }

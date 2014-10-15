@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -11,7 +11,7 @@
     <RootNamespace>Cannonball.Engine</RootNamespace>
     <AssemblyName>Cannonball.Engine</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -43,26 +43,47 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameObjects\ComplexObject.cs" />
+    <Compile Include="GameObjects\FollowCamera.cs" />
+    <Compile Include="GameObjects\IWorldObject.cs" />
     <Compile Include="GameObjects\Primitive.cs" />
+    <Compile Include="Graphics\Billboard.cs" />
+    <Compile Include="Graphics\Drawings\SpriteBatchHelpers.cs" />
     <Compile Include="Graphics\Camera\ICamera.cs" />
     <Compile Include="Graphics\Camera\OrthographicCamera.cs" />
     <Compile Include="Graphics\Camera\PerspectiveCamera.cs" />
+    <Compile Include="Graphics\Particles\ParticleEmitter.cs" />
+    <Compile Include="Graphics\Particles\ParticleSettings.cs" />
+    <Compile Include="Graphics\Particles\ParticleSystem.cs" />
+    <Compile Include="Graphics\Particles\ParticleVertex.cs" />
     <Compile Include="Graphics\VertexTypes\VertexPositionNormal.cs" />
     <Compile Include="Inputs\InputSystem.cs" />
     <Compile Include="Inputs\MouseButtons.cs" />
+    <Compile Include="Procedural\Algorithms\Bezier.cs" />
     <Compile Include="Procedural\Algorithms\ConcreteLSystems.cs" />
     <Compile Include="Procedural\Algorithms\DiamondSquare.cs" />
     <Compile Include="Procedural\Algorithms\Turtle.cs" />
     <Compile Include="Procedural\Algorithms\LSystem.cs" />
+    <Compile Include="Procedural\Effects\LightningGenerator.cs" />
     <Compile Include="Procedural\Objects\CubePrimitive.cs" />
     <Compile Include="Procedural\Objects\GeometricPrimitive.cs" />
+    <Compile Include="Procedural\Objects\PlanePrimitive.cs" />
     <Compile Include="Procedural\Objects\Primitives.cs" />
     <Compile Include="Procedural\Objects\SpherePrimitive.cs" />
+    <Compile Include="Procedural\Textures\LightningTexture.cs" />
     <Compile Include="Procedural\Textures\PlasmaTexture.cs" />
     <Compile Include="Procedural\Textures\PlasmaVariationGenerator.cs" />
     <Compile Include="Procedural\Textures\TextureGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ArrayHelpers.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticCommand.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticsCommandHost.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticsManager.cs" />
+    <Compile Include="Utils\Diagnostics\DiagnosticsUI.cs" />
+    <Compile Include="Utils\Diagnostics\Subsystems\GameComponentFactory.cs" />
+    <Compile Include="Utils\Diagnostics\Subsystems\TimeRuler.cs" />
+    <Compile Include="Utils\KeyboardHelpers.cs" />
+    <Compile Include="Utils\Diagnostics\Subsystems\FPSCounter.cs" />
     <Compile Include="Utils\RandomizationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,7 +93,6 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

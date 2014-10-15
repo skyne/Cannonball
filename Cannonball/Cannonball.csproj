@@ -55,39 +55,52 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
+    <Compile Include="GameObjects\Ship.cs" />
+    <Compile Include="GameObjects\Thruster.cs" />
+    <Compile Include="LightningTestGame.cs" />
     <Compile Include="LSystemTestGame.cs" />
+    <Compile Include="ParticleTestGame.cs" />
     <Compile Include="PlasmaTestGame.cs" />
+    <Compile Include="PrimitiveTestGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphereTest\GameObject.cs" />
     <Compile Include="SphereTest\SphereTestGame.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="DFPluginAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DfPluginApi.1.0.0\lib\net45\DFPluginAPI.dll</HintPath>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DFPluginFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="DFNetwork.Framework, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DfPluginFramework.1.0.0\lib\net45\DFPluginFramework.dll</HintPath>
+      <HintPath>..\packages\DFNetwork.Framework.1.0.0.1\lib\net451\DFNetwork.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="DFNetwork.Tcp.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DFNetwork.Tcp.Client.1.0.0.0\lib\net451\DFNetwork.Tcp.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="DFNetwork.Tcp.Shared">
+      <HintPath>..\packages\DFNetwork.Tcp.Shared.1.0.0.0\lib\net451\DFNetwork.Tcp.Shared.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="NotifyPropertyChanged">
-      <HintPath>..\lib\Afterthought\NotifyPropertyChanged.dll</HintPath>
+    <Reference Include="NBug">
+      <HintPath>..\packages\NBug.1.2.2\lib\net40-client\NBug.dll</HintPath>
     </Reference>
-    <Reference Include="SCP.Common, Version=1.62.163.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="SCP.Common">
       <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Common.dll</HintPath>
     </Reference>
-    <Reference Include="SCP.Productivity, Version=1.62.163.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SCP.Productivity">
       <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Productivity.dll</HintPath>
     </Reference>
-    <Reference Include="SCP.Shared, Version=1.62.163.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SCP.Shared">
       <HintPath>..\packages\SCP.1.62.163\lib\net45\SCP.Shared.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -106,9 +119,17 @@
       <Project>{483274a5-69f7-4444-b8bc-8c2723d5fefc}</Project>
       <Name>Cannonball.Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MemberValueWatcherDFPlugin\PropertyValueWatcher.csproj">
-      <Project>{4bb8555c-a20d-4745-881e-40fdf6b45950}</Project>
-      <Name>PropertyValueWatcher</Name>
+    <ProjectReference Include="..\Cannonball.Network.Shared\Cannonball.Network.Shared.csproj">
+      <Project>{ba26f7fe-7d4d-416e-8c17-157e9de57ab1}</Project>
+      <Name>Cannonball.Network.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Client.Shared\Cannonball.Client.Shared.csproj">
+      <Project>{3cd160e2-906f-44f5-91c3-11452265f854}</Project>
+      <Name>Cannonball.Client.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cannonball.Shared\Cannonball.Shared.csproj">
+      <Project>{125633c7-95b3-444b-89d1-d5bda8b9a166}</Project>
+      <Name>Cannonball.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +160,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Shaders\Billboarding.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Shaders\Particles.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Fonts\DebugFont.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="app.config" />
+    <None Include="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -7,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using Cannonball.Engine.Procedural.Effects;
+using Cannonball.Engine.Inputs;
 #endregion
 
 namespace Cannonball
@@ -14,13 +17,17 @@ namespace Cannonball
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class LightningTestGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        InputSystem inputSystem;
 
+        //IEnumerable<Vector2> lightningPoints;
+        //IEnumerable<LightningSegment> lightningSegments;
+        AnimatedLightning anim;
 
-        public Game1()
+        public LightningTestGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -35,7 +42,24 @@ namespace Cannonball
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 512;
+            graphics.PreferredBackBufferHeight = 512;
+            graphics.ApplyChanges();
+
+            SpriteBatchHelpers.Initialize(this.GraphicsDevice);
+            inputSystem = new InputSystem(this);
+
+            anim = new AnimatedLightning(Vector2.One * 12, Vector2.One * 500, 45, MathHelper.ToRadians(45), 0.7f, 5, 1, 10);
+
+            //lightningPoints = LightningGenerator.Get(Vector2.One * 12, Vector2.One * 500, 140, 5, 1);
+            //lightningSegments = LightningGenerator.GetForked(Vector2.One * 12, Vector2.One * 500, 45, MathHelper.ToRadians(45), 0.7f, 5, 1);
+
+            inputSystem.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
+            inputSystem.RegisterMouseMoveAction((x, y) =>
+                {
+                    anim.End += new Vector2(x, y);
+                });
 
             base.Initialize();
         }
@@ -48,7 +72,6 @@ namespace Cannonball
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -68,10 +91,10 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            inputSystem.Update(gameTime);
 
             // TODO: Add your update logic here
+            anim.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -82,9 +105,29 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            //var prev = lightningPoints.First();
+            //foreach (var point in lightningPoints.Skip(1))
+            //{
+            //    DrawLine(prev, point, Color.White);
+            //    prev = point;
+            //}
+
+            //foreach (var segment in lightningSegments)
+            //{
+            //    spriteBatch.DrawLine(segment.From, segment.To, Color.White);
+            //}
+
+            foreach (var segment in anim.Segments)
+            {
+                spriteBatch.DrawLine(segment.From, segment.To, segment.Color);
+            }
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

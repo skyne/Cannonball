@@ -1,24 +1,24 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
+using Cannonball.Client.Shared.Network;
+using Cannonball.Engine.GameObjects;
+using Cannonball.Engine.Graphics;
+using Cannonball.Engine.Graphics.Camera;
+using Cannonball.Engine.Graphics.Particles;
+using Cannonball.Engine.Inputs;
+using Cannonball.Engine.Procedural.Objects;
+using Cannonball.Engine.Procedural.Textures;
+using Cannonball.Engine.Utils.Diagnostics;
+using Cannonball.GameObjects;
+using Cannonball.Shared.GameObjects;
+using DFNetwork.Framework.Client;
+using DFNetwork.Tcp.Client;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
-using Cannonball.Engine.GameObjects;
-using System.Diagnostics;
-using Cannonball.Engine.Graphics.Camera;
-using Cannonball.Engine.Procedural.Textures;
-using Cannonball.Engine.Procedural.Objects;
-using Cannonball.Engine.Inputs;
-using Cannonball.Engine.Procedural.Algorithms;
-using Cannonball.Engine.Procedural.Algorithms.LSystems;
-using System.Threading.Tasks;
-using PropertyValueWatcher;
-using DFPluginFramework;
-using Cannonball.SphereTest;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 #endregion
 
 namespace Cannonball
@@ -28,35 +28,49 @@ namespace Cannonball
     /// </summary>
     public class SphereTestGame : Game
     {
-        private const int maximumNumberOfSpheres = 1000;
+        private const int maximumNumberOfSpheres = 100;
         const float worldSize = 500f;
 
-        PluginManager pluginManager;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D lightningTexture;
+
         Primitive[] spheres = new Primitive[maximumNumberOfSpheres];
         RenderTarget2D sceneTarget;
         ICamera camera = new PerspectiveCamera();
+
+        int currentlyFollowed;
+        int CurrentlyFollowed
+        {
+            get
+            {
+                return currentlyFollowed;
+            }
+            set
+            {
+                if (value > ships.Count)
+                    currentlyFollowed = 0;
+                if (value < 0)
+                    currentlyFollowed = ships.Count;
+            }
+        }
+        FollowCamera followCam;
         InputSystem inputSystem;
-        Primitive player;
-        PropertyValueChangeDispatcher propValueWatcher;
-        List<GameObject> testObjects;
-        List<Primitive> entities = new List<Primitive>();
+        //ComplexObject cube;
+        List<Ship> ships;
+        Ship myShip;
 
-        int frameRate = 0;
-        int frameCounter = 0;
-        TimeSpan elapsedTime = TimeSpan.Zero;
+        TcpClientNetworkHost networkClient;
+        ICannonballClientSession clientSession;
 
-        float cameraAngle = 0;
-        float cameraHeight = 0;
-        float zoomLevel = 1;
-        bool cameraMode = false;
+        ParticleSettings pSet;
+        ParticleSystem pSys;
+        ParticleEmitter pEmi;
+        ParticleEmitter pEmi2;
 
         public SphereTestGame()
             : base()
         {
-            pluginManager = new PluginManager();
-            pluginManager.PluginsDirectory = "Plugins";
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -69,20 +83,8 @@ namespace Cannonball
         /// </summary>
         protected override void Initialize()
         {
-            pluginManager.RegisterPlugins();
-            propValueWatcher = new PropertyValueChangeDispatcher(pluginManager);
-            testObjects = new List<GameObject>();
-            for (int i = 0; i < 1000;i++ )
-            {
-                var testObject = new GameObject();
-                testObjects.Add(testObject);
-                propValueWatcher.Register((object)testObject);
-            }
-           
-
-            this.IsFixedTimeStep = false;
             // TODO: Add your initialization logic here
-            Primitives.Initialize(GraphicsDevice);
+            ships = new List<Ship>(20);
 
             sceneTarget = new RenderTarget2D(GraphicsDevice
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
@@ -92,65 +94,29 @@ namespace Cannonball
                 , GraphicsDevice.PresentationParameters.DepthStencilFormat);
 
             camera = new PerspectiveCamera()
-                {
-                    Position = Vector3.UnitX,
-                    Target = Vector3.Zero,
-                    Up = Vector3.Up,
-                    FieldOfView = MathHelper.PiOver4,
-                    AspectRatio = GraphicsDevice.Viewport.AspectRatio,
-                    NearPlane = 0.01f,
-                    FarPlane = 5000f
-                };
+            {
+                Position = Vector3.UnitX,
+                Target = Vector3.Zero,
+                Up = Vector3.Up,
+                FieldOfView = MathHelper.PiOver4,
+                AspectRatio = GraphicsDevice.Viewport.AspectRatio,
+                NearPlane = 0.01f,
+                FarPlane = 5000f
+            };
+            followCam = new FollowCamera(camera, myShip);
+            CurrentlyFollowed = ships.IndexOf(myShip);
 
+            #region input
             inputSystem = new InputSystem(this);
-            inputSystem.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
-            inputSystem.RegisterMouseWheelAction(change =>
-                {
-                    var prevZoomLevel = zoomLevel;
-                    if (change < 0)
-                    {
-                        // closing to focus point
-                        if (zoomLevel < 1) zoomLevel -= 0.025f;
-                        else zoomLevel -= 0.1f;
-                    }
-                    else if (change > 0)
-                    {
-                        if (zoomLevel < 1) zoomLevel += 0.025f;
-                        else zoomLevel += 0.1f;
-                    }
-                    if (zoomLevel <= 0) zoomLevel = prevZoomLevel;
-                });
-            inputSystem.RegisterMouseButtonPressedAction(MouseButtons.MiddleButton, () => cameraMode = true);
-            inputSystem.RegisterMouseButtonReleasedAction(MouseButtons.MiddleButton, () => cameraMode = false);
-            inputSystem.RegisterMouseMoveAction((x, y) =>
-                {
-                    if (cameraMode)
-                    {
-                        var axis = Vector3.Cross(camera.Target - camera.Position, camera.Up);
-                        var transform = Quaternion.CreateFromAxisAngle(axis, MathHelper.ToRadians(y * 10));
-                        camera.Position = Vector3.Transform(camera.Position, transform);
+            
+            #endregion input
 
-                        cameraAngle += MathHelper.ToRadians(x);
-                        cameraHeight += y % 10;
-                    }
-                    else
-                    {
-                        var transform = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians((float)x / 10), MathHelper.ToRadians((float)y / 10), 0);
-                        player.Forward = Vector3.Transform(player.Forward, transform);
-                    }
-                });
-            inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
-                {
-                    player.Velocity += player.Forward;
-                });
-            inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
-                {
-                    player.Velocity -= player.Forward;
-                });
-            inputSystem.RegisterKeyReleasedAction(Keys.Space, () =>
-                {
-                    player.Velocity = Vector3.Zero;
-                });
+
+            networkClient = new TcpClientNetworkHost();
+
+
+            Services.AddService(typeof(ICamera), camera);
+            Services.AddService(typeof(InputSystem), inputSystem);
 
             base.Initialize();
         }
@@ -161,34 +127,167 @@ namespace Cannonball
         /// </summary>
         protected override void LoadContent()
         {
+            networkClient.Start();
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            this.Services.AddService(typeof(SpriteBatch), spriteBatch);
+            DiagnosticsManager.Initialize(this);
+            SpriteBatchHelpers.Initialize(GraphicsDevice);
+            Primitives.Initialize(GraphicsDevice);
+            Billboard.Initialize(GraphicsDevice, Content.Load<Effect>("Shaders/Billboarding"));
 
             // TODO: use this.Content to load your game content here
             CreateSpheres();
 
-            player = new Primitive(GraphicsDevice, 10f, true);
-            player.Position = Vector3.Zero;
-            player.Scale = new Vector3(player.Scale.X, player.Scale.Y, player.Scale.Z * 3);
-            player.Color = Color.Gray;
+            //for testing multi ship environment
+            //for (int i = 0; i < 19; i++)
+            //    ships.Add(new Ship(this));
 
-            entities.Add(player);
+            //ships.Add(new Ship(this, true));          
 
-            Random random = new Random();
-            //add some random entities to test 'multiplayer' like environment
-            var entitiesNumber = random.Next(1000,1000);
-            for(int i = 0; i < entitiesNumber; i++)
+            lightningTexture = new LightningTexture(GraphicsDevice, 50, 100);
+
+            #region Particles
+            pSet = new ParticleSettings()
             {
-                var entity = new Primitive(GraphicsDevice, (float)random.Next(10, 20), true);
-                entity.Position = new Vector3(
-                                            random.NextFloat(-worldSize, (worldSize * random.Next(-1, 1))),
-                                            random.NextFloat(-worldSize, (worldSize * random.Next(-1, 1))),
-                                            random.NextFloat(-worldSize, (worldSize * random.Next(-1, 1)))
-                                            );
-                entity.Scale = new Vector3(player.Scale.X, player.Scale.Y, player.Scale.Z * 3);
-                entity.Color = Color.Red;
+                BlendState = BlendState.Additive,
+                MaxParticles = 10,
+                Duration = TimeSpan.FromSeconds(0.5),
+                DurationRandomness = 0.1f,
+                EmitterVelocitySensitivity = 0,
+                MinVelocity = 1f,
+                MaxVelocity = 2f,
+                Gravity = Vector3.Zero,
+                EndVelocity = 0,
+                MinColor = Color.White,
+                MaxColor = Color.White,
+                MinRotateSpeed = -0.1f,
+                MaxRotateSpeed = 0.1f,
+                MinStartSize = 0.25f,
+                MaxStartSize = 0.35f,
+                MinEndSize = 0.5f,
+                MaxEndSize = 0.6f
+            };
 
-                entities.Add(entity);
+            var pTex = new Texture2D(GraphicsDevice, 5, 5);
+            pTex.SetData(Enumerable.Repeat(Color.FromNonPremultiplied(0, 0, 255, 125), 25).ToArray());
+
+            var pEff = Content.Load<Effect>("Shaders/Particles");
+
+            pSys = new ParticleSystem(this, pSet, pTex, pEff, camera);
+            pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitX, ParticlesPerSecond = 10 };
+            pEmi2 = new ParticleEmitter(pSys) { Position = -Vector3.UnitX, ParticlesPerSecond = 10 };
+            //pEmi = new ParticleEmitter(pSys) { Position = Vector3.UnitY, ParticlesPerSecond = 10 };
+            //pEmi = new ParticleEmitter(pSys) { Position = new Vector3(Vector2.One, 0), ParticlesPerSecond = 10 };
+            #endregion
+
+            clientSession = ((networkClient.SessionManager as ClientSessionManager).Session as ICannonballClientSession);
+
+            clientSession.NewShipAdded += clientSession_NewShipAdded;
+
+            ////thefuck!?
+            while (myShip == null)
+                Thread.Sleep(10);
+
+
+
+            base.LoadContent();
+        }
+
+        void clientSession_NewShipAdded(object sender, IShip e)
+        {
+            var ship = new Ship(this, (DtoShip)e);
+            ships.Add(ship);
+
+            if (ship.IsPlayerControlled)
+            {
+                myShip = ship;
+                //followCam.Target = myShip;
+                this.followCam = new FollowCamera(camera, myShip);
+
+                inputSystem.RegisterMouseMoveAction((x, y) =>
+            {
+                var horizontalAngle = MathHelper.ToRadians((float)-x / 10);
+                var verticalAngle = MathHelper.ToRadians((float)y / 10);
+
+                if (inputSystem.CurrentMouseState.MiddleButton == ButtonState.Pressed)
+                {
+                    followCam.HorizontalAngle += horizontalAngle;
+                    followCam.VerticalAngle += verticalAngle;
+                }
+                else
+                {
+                    myShip.Turn(horizontalAngle, verticalAngle);
+                }
+            });
+                inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
+                {
+                    myShip.ThrustersOn(myShip.Forward);
+                });
+                inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
+                {
+                    myShip.ThrustersOn(-myShip.Forward);
+                });
+                inputSystem.RegisterKeyReleasedAction(Keys.Space, () =>
+                {
+                    myShip.ToggleEngines();
+                });
+                inputSystem = new InputSystem(this);
+                inputSystem.RegisterKeyReleasedAction(Keys.Escape, () => Exit());
+                inputSystem.RegisterKeyReleasedAction(Keys.Tab, () =>
+                    {
+                        DiagnosticsManager.Instance.UI.Show();
+                    });
+                inputSystem.RegisterMouseMoveAction((x, y) =>
+                {
+                    var horizontalAngle = MathHelper.ToRadians((float)-x / 10);
+                    var verticalAngle = MathHelper.ToRadians((float)y / 10);
+
+                    if (inputSystem.CurrentMouseState.MiddleButton == ButtonState.Pressed)
+                    {
+                        followCam.HorizontalAngle += horizontalAngle;
+                        followCam.VerticalAngle += verticalAngle;
+                    }
+                    else
+                    {
+                        myShip.Turn(horizontalAngle, verticalAngle);
+                    }
+                });
+                inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.LeftButton, () =>
+                {
+                    myShip.ThrustersOn(myShip.Forward);
+                });
+                inputSystem.RegisterMouseButtonHeldDownAction(MouseButtons.RightButton, () =>
+                {
+                    myShip.ThrustersOn(-myShip.Forward);
+                });
+                inputSystem.RegisterKeyReleasedAction(Keys.Space, () =>
+                {
+                    myShip.ToggleEngines();
+                });
+                inputSystem.RegisterMouseWheelAction(change =>
+                    {
+                        if (change < 0)
+                        {
+                        // closing to focus point
+                        followCam.Distance /= 2f;
+                        }
+                        else if (change > 0)
+                        {
+                            followCam.Distance *= 2f;
+                        }
+                    });
+                inputSystem.RegisterKeyReleasedAction(Keys.Add, () =>
+                {
+                    var followedShip = ships[CurrentlyFollowed++];
+                    this.followCam = new FollowCamera(camera, followedShip);
+                });
+                inputSystem.RegisterKeyReleasedAction(Keys.Subtract, () =>
+                {
+                    var followedShip = ships[CurrentlyFollowed--];
+                    this.followCam = new FollowCamera(camera, followedShip);
+                });
             }
         }
 
@@ -206,12 +305,12 @@ namespace Cannonball
             };
 
             // The radius of a sphere
-            const float radius = 10f;
+            const float radius = 1f;
 
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
                 // Create the sphere
-                Primitive sphere = new Primitive(GraphicsDevice, radius);
+                Primitive sphere = new Primitive(GraphicsDevice, radius, Primitives.Sphere);
 
                 // Position the sphere in our world
                 sphere.Position = new Vector3(
@@ -242,6 +341,8 @@ namespace Cannonball
             // TODO: Unload any non ContentManager content here
         }
 
+
+        Ship[] myShips = null;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -249,78 +350,55 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime;
-
-            if (elapsedTime > TimeSpan.FromSeconds(1))
-            {
-                elapsedTime -= TimeSpan.FromSeconds(1);
-                frameRate = frameCounter;
-                frameCounter = 0;
-            }
-
-            this.Window.Title = string.Format("fps: {0}", frameRate);
+            DiagnosticsManager.Instance.TimeRuler.StartFrame();
+            DiagnosticsManager.Instance.TimeRuler.BeginMark("Update", Color.Blue);
 
             inputSystem.Update(gameTime);
-
-            Parallel.ForEach(testObjects, testObject =>
-            //foreach (var testObject in testObjects)
-            {
-                testObject.Counter++; //elkell indítani a valueWatchereventjét, aminek kikell küldenie az üzenetet a megfelelő plugin csatornára.
-            });
-
-            //player.Update(gameTime);
-
-            Random random = new Random();
-            Parallel.ForEach(entities , entity =>
-                //foreach(var entity in entities)
-            {
-                if (entity != player)
-                {
-                    if (Math.Abs(entity.Velocity.Length()) < 0.01f)
-                        entity.Velocity = new Vector3(random.NextFloat(-50, 50), random.NextFloat(-50, 50), random.NextFloat(-50, 50));
-                    else
-                        entity.Velocity -= entity.Velocity * 0.001f;
-
-                    entity.Forward = entity.Velocity;
-                }
-
-                entity.Update(gameTime);
-            });
-
-            // TODO: Add your update logic here
-            //cameraAngle += 0.001f;            
+            myShip.Update(gameTime);
+            followCam.Update(gameTime);
+            pEmi.Position = myShip.Position - myShip.Forward * (myShip.Scale.Z * 1.05f / 2f);
+            pEmi2.Position = myShip.Position - myShip.Forward * (myShip.Scale.Z * 1.05f / 2f);
+            pEmi.Direction = -myShip.Forward;
+            pEmi2.Direction = -myShip.Forward;
+            pSys.Update(gameTime);
 
             base.Update(gameTime);
+
+            myShips = new Ship[ships.Count];
+            ships.ToArray().CopyTo(myShips, 0);
+
+            DiagnosticsManager.Instance.TimeRuler.EndMark("Update");
         }
 
         private void DrawScene(GameTime gameTime)
         {
-            frameCounter++;
-
+            DiagnosticsManager.Instance.TimeRuler.BeginMark("DrawScene", Color.Red);
             GraphicsDevice.SetRenderTarget(sceneTarget);
 
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
             GraphicsDevice.Clear(Color.Black);
 
-            //camera.Position = Vector3.Transform(camera.Position, Matrix.CreateFromAxisAngle(camera.Up, 0.002f));
-            camera.Position = (new Vector3((float)(worldSize * Math.Sin(cameraAngle)), worldSize + cameraHeight, (float)(worldSize * Math.Cos(cameraAngle))) * zoomLevel) + player.Position;
-            camera.Target = player.Position;
-
             // Draw all of our spheres
             for (int i = 0; i < maximumNumberOfSpheres; i++)
             {
                 spheres[i].Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+                var forward = camera.Position - spheres[i].Position;
+                forward.Normalize();
+                GraphicsDevice.DrawPlane(Matrix.CreateScale(2) * Matrix.CreateWorld(spheres[i].Position, forward, Vector3.Up), lightningTexture, camera);
             }
 
-            //player.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+            //cube.Draw(Matrix.Identity, camera.ViewMatrix, camera.ProjectionMatrix);
 
-            foreach (var entity in entities)
+            foreach (var ship in myShips)
             {
-                entity.Draw(camera.ViewMatrix, camera.ProjectionMatrix);
+                ship.Draw(gameTime);
             }
+            myShip.Draw(gameTime);
+            pSys.Draw(gameTime);
 
             GraphicsDevice.SetRenderTarget(null);
+            DiagnosticsManager.Instance.TimeRuler.EndMark("DrawScene");
         }
 
         /// <summary>
@@ -329,6 +407,8 @@ namespace Cannonball
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            DiagnosticsManager.Instance.TimeRuler.BeginMark("Draw", Color.Green);
+
             DrawScene(gameTime);
 
             GraphicsDevice.Clear(Color.Black);
@@ -341,9 +421,11 @@ namespace Cannonball
                 , GraphicsDevice.PresentationParameters.BackBufferWidth
                 , GraphicsDevice.PresentationParameters.BackBufferHeight), Color.White);
 
+            base.Draw(gameTime);
+
             spriteBatch.End();
 
-            base.Draw(gameTime);
+            DiagnosticsManager.Instance.TimeRuler.EndMark("Draw");
         }
     }
 }
