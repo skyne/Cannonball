@@ -1,4 +1,4 @@
-﻿#region Using Statements
+#region Using Statements
 using Cannonball.Client.Shared.Network;
 using Cannonball.Engine.GameObjects;
 using Cannonball.Engine.Graphics;

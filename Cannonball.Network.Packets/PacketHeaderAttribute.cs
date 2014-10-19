@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cannonball.Network.Packets
+namespace Cannonball.Network.Packtes
 {
-    [System.AttributeUsage(System.AttributeTargets.Class |
-                           System.AttributeTargets.Struct)]
-    public class PacketHeader : System.Attribute
+    [AttributeUsage(AttributeTargets.Class)]
+    public class PacketHeaderAttribute : Attribute
     {
-        public byte[] Header { get; set; }
-        public PacketHeader(int header)
+        public int Header { get; private set; }
+
+        public PacketHeaderAttribute(int header)
         {
-            this.Header = BitConverter.GetBytes(header);
+            this.Header = header;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Cannonball.Network.Server.Protocol;
 using Cannonball.Network.Server.Session;
+using Cannonball.Network.Shared.Packets;
 using Castle.MicroKernel.Registration;
 using DFNetwork.Framework;
 using DFNetwork.Framework.Protocol;
@@ -43,6 +44,8 @@ namespace Cannonball.Network.Server
             host.DependencyContainer.Register(Component.For<IClientSession>().ImplementedBy<ClientSession>());
             logger.Debug("DI: Registering <ServerSideProtocol> for default <IServerProtocol>");
             host.DependencyContainer.Register(Component.For<IServerSideProtocol>().ImplementedBy<ServerSideProtocol>().LifestyleTransient());
+
+            PacketFactory.BuildPacketCache();
 
             logger.Info("Initialized plugin: {0}", this.GetName());
 

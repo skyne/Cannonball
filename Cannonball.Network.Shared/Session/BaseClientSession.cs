@@ -28,7 +28,6 @@ namespace Cannonball.Network.Shared.Session
         public SessionStatus Status
         { get; set; }
 
-
         public WindsorContainer protocolContainer { get; set; }
 
         protected PacketSerializer serializer;

@@ -13,11 +13,11 @@ namespace Cannonball
     /// </summary>
     public static class Program
     {
-        static Program()
-        {
-            NBug.Settings.ReleaseMode = true;
-            AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
-        }
+        //static Program()
+        //{
+        //    NBug.Settings.ReleaseMode = true;
+        //    AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+        //}
 
         /// <summary>
         /// The main entry point for the application.

@@ -30,7 +30,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -64,8 +64,7 @@
     <Compile Include="PrimitiveTestGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SphereTest\GameObject.cs" />
-    <Compile Include="SphereTest\SphereTestGame.cs" />
+    <Compile Include="SphereTestGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
@@ -82,7 +81,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DFNetwork.Tcp.Client.1.0.0.0\lib\net451\DFNetwork.Tcp.Client.dll</HintPath>
     </Reference>
-    <Reference Include="DFNetwork.Tcp.Shared">
+    <Reference Include="DFNetwork.Tcp.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DFNetwork.Tcp.Shared.1.0.0.0\lib\net451\DFNetwork.Tcp.Shared.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
@@ -183,7 +183,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)lib\Afterthought\Afterthought.Amender.exe "$(TargetPath)" "$(SolutionDir)lib\Afterthought\NotifyPropertyChanged.dll"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

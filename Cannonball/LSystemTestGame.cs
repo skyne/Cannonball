@@ -1,7 +1,6 @@
 ﻿using Cannonball.Engine.Inputs;
 using Cannonball.Engine.Procedural.Algorithms;
 using Cannonball.Engine.Procedural.Algorithms.LSystems;
-using DFPluginFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,7 +13,6 @@ namespace Cannonball
 {
     class LSystemTestGame : Game
     {
-        PluginManager pluginManager;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         InputSystem inputSystem;
@@ -29,8 +27,6 @@ namespace Cannonball
         public LSystemTestGame()
             : base()
         {
-            
-            
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -53,54 +49,54 @@ namespace Cannonball
             inputSystem.RegisterKeyReleasedAction(Keys.W, () => { angle /= 2; RefreshTurtle(); });
             inputSystem.RegisterKeyReleasedAction(Keys.S, () => { angle *= 2; RefreshTurtle(); });
             inputSystem.RegisterKeyReleasedAction(Keys.D0, () =>
-                {
-                    system = new TreeSystem();
-                    angle = 45;
-                    level = 8;
-                    RefreshTurtle();
-                });
+            {
+                system = new TreeSystem();
+                angle = 45;
+                level = 8;
+                RefreshTurtle();
+            });
             inputSystem.RegisterKeyReleasedAction(Keys.D1, () =>
-                {
-                    system = new SierpinskiTriangle();
-                    angle = 60;
-                    level = 8;
-                    RefreshTurtle();
-                });
+            {
+                system = new SierpinskiTriangle();
+                angle = 60;
+                level = 8;
+                RefreshTurtle();
+            });
             inputSystem.RegisterKeyReleasedAction(Keys.D2, () =>
-                {
-                    system = new SierpinskiTriangleB();
-                    angle = 120;
-                    level = 8;
-                    RefreshTurtle();
-                });
+            {
+                system = new SierpinskiTriangleB();
+                angle = 120;
+                level = 8;
+                RefreshTurtle();
+            });
             inputSystem.RegisterKeyReleasedAction(Keys.D3, () =>
-                {
-                    system = new DragonCurve();
-                    angle = 90;
-                    dist = 6;
-                    level = 8;
-                    RefreshTurtle();
-                });
+            {
+                system = new DragonCurve();
+                angle = 90;
+                dist = 6;
+                level = 8;
+                RefreshTurtle();
+            });
             inputSystem.RegisterKeyReleasedAction(Keys.D4, () =>
-                {
-                    system = new KochCurve();
-                    angle = 90;
-                    level = 8;
-                    RefreshTurtle();
-                });
+            {
+                system = new KochCurve();
+                angle = 90;
+                level = 8;
+                RefreshTurtle();
+            });
             inputSystem.RegisterKeyReleasedAction(Keys.D5, () =>
-                {
-                    system = new CantorDust();
-                    level = 8;
-                    RefreshTurtle();
-                });
+            {
+                system = new CantorDust();
+                level = 8;
+                RefreshTurtle();
+            });
             inputSystem.RegisterKeyReleasedAction(Keys.D6, () =>
-                {
-                    system = new FractalPlant();
-                    angle = 35;
-                    level = 8;
-                    RefreshTurtle();
-                });
+            {
+                system = new FractalPlant();
+                angle = 35;
+                level = 8;
+                RefreshTurtle();
+            });
 
             base.Initialize();
         }
