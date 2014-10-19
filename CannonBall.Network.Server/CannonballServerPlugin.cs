@@ -41,11 +41,15 @@ namespace Cannonball.Network.Server
             logger.Info("Initializing plugin: {0}", this.GetName());
 
             logger.Debug("DI: Registering <ClientSession> for default <IClientSession>");
-            host.DependencyContainer.Register(Component.For<IClientSession>().ImplementedBy<ClientSession>());
+            host.DependencyContainer.Register(Component.For<IClientSession>().ImplementedBy<ClientSession>().LifestyleTransient());
             logger.Debug("DI: Registering <ServerSideProtocol> for default <IServerProtocol>");
             host.DependencyContainer.Register(Component.For<IServerSideProtocol>().ImplementedBy<ServerSideProtocol>().LifestyleTransient());
 
             PacketFactory.BuildPacketCache();
+
+            logger.Debug("creating a fake session for caching purposes");
+            var session = host.DependencyContainer.Resolve<IClientSession>();
+            session.Close();
 
             logger.Info("Initialized plugin: {0}", this.GetName());
 

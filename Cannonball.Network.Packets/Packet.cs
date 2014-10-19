@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Cannonball.Shared.DTO;
+using Microsoft.Xna.Framework;
 
 namespace Cannonball.Network.Packets
 {
@@ -18,7 +20,7 @@ namespace Cannonball.Network.Packets
     {
         private byte[] body;
 
-        public PacketWriter(int initialSize = 1)
+        public PacketWriter(int initialSize = 0)
         {
             this.body = new byte[initialSize];
         }
@@ -82,6 +84,26 @@ namespace Cannonball.Network.Packets
         {
             AppendTo(BitConverter.GetBytes(number));
         }
+
+        public void AppendTo(Guid guid)
+        {
+            AppendTo(guid.ToString());
+        }
+
+        public void AppendTo(Vector3 vector)
+        {
+            this.AppendTo(vector.X);
+            this.AppendTo(vector.Y);
+            this.AppendTo(vector.Z);
+        }
+
+        public void AppendTo(Color color)
+        {
+            this.AppendTo(color.A);
+            this.AppendTo(color.R);
+            this.AppendTo(color.G);
+            this.AppendTo(color.B);
+        }
     }
     public class PacketReader
     {
@@ -123,9 +145,8 @@ namespace Cannonball.Network.Packets
 
         public string ReadString()
         {
+            int length = this.ReadInt32();
             UTF8Encoding enc = new UTF8Encoding();
-            int length = BitConverter.ToInt32(body, position);
-            position += 4;
             string value = enc.GetString(body, position, length);
             position += length;
             return value;
@@ -136,6 +157,29 @@ namespace Cannonball.Network.Packets
             bool value = BitConverter.ToBoolean(body, position);
             position += 1;
             return value;
+        }
+
+        public Guid ReadGuid()
+        {
+            Guid guid = Guid.Parse(this.ReadString());
+            return guid;
+        }
+
+        public Vector3 ReadVector3()
+        {
+            var x = this.ReadFloat();
+            var y = this.ReadFloat();
+            var z = this.ReadFloat();
+            return new Vector3(x, y, z);
+        }
+
+        public Color ReadColor()
+        {
+            var a = this.ReadByte();
+            var r = this.ReadByte();
+            var g = this.ReadByte();
+            var b = this.ReadByte();
+            return new Color(r, g, b, a);
         }
     }
 }

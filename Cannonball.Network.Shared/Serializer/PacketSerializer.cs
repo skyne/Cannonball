@@ -12,17 +12,17 @@ namespace Cannonball.Network.Shared.Serializer
 {
     public class PacketSerializer
     {
-        private int GetPacketHeader(IPacket packet)
-        {
-            var packetType = packet.GetType();
-            var header = packetType.GetCustomAttribute<PacketHeaderAttribute>().Return(o=> o.Header,-1);
-            return header;
-        }
+        //private int GetPacketHeader(IPacket packet)
+        //{
+        //    var packetType = packet.GetType();
+        //    var header = packetType.GetCustomAttribute<PacketHeaderAttribute>().Return(o=> o.Header,-1);
+        //    return header;
+        //}
 
         public byte[] Serialize(IPacket packet)
         {
             var body = packet.Serialize();
-            var header = BitConverter.GetBytes(GetPacketHeader(packet));
+            var header = BitConverter.GetBytes(PacketFactory.GetPacketHeader(packet.GetType()));
 
             var data = new byte[body.Length + header.Length];
             Array.ConstrainedCopy(header, 0, data, 0, header.Length);

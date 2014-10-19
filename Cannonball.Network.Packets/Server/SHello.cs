@@ -19,12 +19,15 @@ namespace Cannonball.Network.Packets.Server
 
         public void Deserialize(byte[] bytes)
         {
-            throw new NotImplementedException();
+            var reader = new PacketReader(bytes);
+            this.HelloResponse = (HelloResponse)reader.ReadInt32();
         }
 
         public byte[] Serialize()
         {
-            throw new NotImplementedException();
+            var writer = new PacketWriter();
+            writer.AppendTo((int)this.HelloResponse);
+            return writer.GetBytes();
         }
     }
 }

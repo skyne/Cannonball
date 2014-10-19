@@ -12,19 +12,21 @@ using Cannonball.Network.Shared.Exceptions;
 
 namespace Cannonball.Network.Client.PacketHandlers
 {
-    public class SObjectListUpdateHandler : ServerPacketHandler<SObjectUpdate>
+    public class SUpdateWorldObjectsHandler : ServerPacketHandler<SUpdateWorldObjects>
     {
-        public SObjectListUpdateHandler(IClientSession session)
+        public SUpdateWorldObjectsHandler(IClientSession session)
             : base((ClientSession)session)
         {
         }
 
-        public override void Handle(SObjectUpdate packet)
+        public override void Handle(SUpdateWorldObjects packet)
         {
             if (base.Session.Status == SessionStatus.Stranger)
-                throw new PacketInWrongSessionStatusException(typeof(SObjectUpdate), Session.Status);
+                throw new PacketInWrongSessionStatusException(typeof(SUpdateWorldObjects), Session.Status);
 
+            var session = base.Session as ClientSession;
 
+            session.UpdateObjectList(packet.VisibleObjects);
         }
     }
 }

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cannonball.Shared.GameObjects;
+using Cannonball.Shared.DTO;
+using Cannonball.Network.Packets.Helpers;
 
 namespace Cannonball.Network.Packets.Server
 {
-    [Serializable]
     public class SAddNewShip : IServerPacket
     {
         public DtoShip NewShip { get; set; }
@@ -24,12 +25,15 @@ namespace Cannonball.Network.Packets.Server
 
         public void Deserialize(byte[] bytes)
         {
-            throw new NotImplementedException();
+            var reader = new PacketReader(bytes);
+            this.NewShip = ShipExtensions.Deserialize(reader);
         }
 
         public byte[] Serialize()
         {
-            throw new NotImplementedException();
+            var writer = new PacketWriter();
+            ShipExtensions.Serialize(this.NewShip, writer);
+            return writer.GetBytes();
         }
     }
 }

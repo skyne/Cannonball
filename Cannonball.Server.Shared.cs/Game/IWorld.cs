@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,7 @@ namespace Cannonball.Server.Shared.Game
     public interface IWorld
     {
         IEntityManager EntityManager { get; set; }
+
+        void Update(GameTime gameTime);
     }
 }

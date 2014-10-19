@@ -49,6 +49,11 @@ namespace Cannonball.Network.Shared.Packets
             return packet;
         }
 
+        public static int GetPacketHeader(Type type)
+        {
+            return packetTypeCache.FirstOrDefault(o=> o.Value == type).Key;
+        }
+
         private static Type GetPacketType(int header)
         {
             return packetTypeCache[header];

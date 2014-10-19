@@ -40,6 +40,9 @@ namespace Cannonball.Network.Shared.Session
 
         public void Send(IPacket packet)
         {
+            if (Channel == null)
+                return;
+
             byte[] buffer = serializer.Serialize(packet);
             base.Channel.Send(buffer);
         }
@@ -50,21 +53,6 @@ namespace Cannonball.Network.Shared.Session
             var handlerType = typeof(PacketHandler<>).MakeGenericType(packet.GetType());
             var handler = (IPacketHandler)protocolContainer.Resolve(handlerType);
             handler.HandlePacket(packet);
-        }
-    }
-
-    sealed class AllowAllAssemblyVersionsDeserializationBinder : System.Runtime.Serialization.SerializationBinder
-    {
-        public override Type BindToType(string assemblyName, string typeName)
-        {
-            Type typeToDeserialize = null;
-
-            var ass = AppDomain.CurrentDomain.GetAssemblies().First(o => o.FullName == assemblyName);
-
-            // Get the type using the typeName and assemblyName
-            typeToDeserialize = ass.GetType(typeName);
-
-            return typeToDeserialize;
         }
     }
 }

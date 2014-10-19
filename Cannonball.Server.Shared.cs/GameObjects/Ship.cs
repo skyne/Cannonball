@@ -81,7 +81,7 @@ namespace Cannonball.Server.Shared.GameObjects
                 Owner = owner,
                 Name = "Ship",
                 Position = Vector3.Zero,
-                Velocity = Vector3.Zero,
+                Velocity = new Vector3(0.1f,0,0),
                 Up = new Vector3(0, 1, 0),
                 Forward = new Vector3(1, 0, 0),
                 Scale = new Vector3(1, 1, 3),
@@ -89,6 +89,17 @@ namespace Cannonball.Server.Shared.GameObjects
                 Color = new Color(rnd.Next(255), rnd.Next(255), rnd.Next(255)),
             };
             return ship;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (this.Velocity.Length() < 0.0001f)
+                this.Velocity = Vector3.Zero;
+
+            if (Engine == EngineState.Stopping)
+                this.Velocity *= 0.992f;
+
+            Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
-}
 }

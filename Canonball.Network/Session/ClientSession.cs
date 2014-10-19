@@ -27,11 +27,18 @@ namespace Cannonball.Network.Client.Session
         }
 
         public event EventHandler<IShip> NewShipAdded;
+        public event EventHandler<IEnumerable<IShip>> ObjectListUpdated;
 
         public void AddShip(IShip ship)
         {
             if (NewShipAdded != null)
                 NewShipAdded(this, ship);
+        }
+
+        public void UpdateObjectList(IEnumerable<IShip> objects)
+        {
+            if (ObjectListUpdated != null)
+                ObjectListUpdated(this, objects);
         }
     }
 }

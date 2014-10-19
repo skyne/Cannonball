@@ -11,12 +11,12 @@ namespace Cannonball.Network.Packets.Client
 
         public void Deserialize(byte[] bytes)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public byte[] Serialize()
         {
-            throw new NotImplementedException();
+            return new byte[0];
         }
     }
 }

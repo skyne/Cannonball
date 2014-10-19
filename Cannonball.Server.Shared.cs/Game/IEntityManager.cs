@@ -1,4 +1,5 @@
 ﻿using Cannonball.Shared.GameObjects;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace Cannonball.Server.Shared.Game
     public interface IEntityManager
     {
         void AddEntity(IShip entity);
-        System.Collections.Generic.IEnumerable<IShip> Entities { get; }
+
+        void Update(GameTime gameTime);
         event EventHandler<IShip> OnNewEntityAdded;
+        event EventHandler<IEnumerable<IShip>> ObjectsUpdated;
     }
 }

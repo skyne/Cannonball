@@ -15,6 +15,7 @@ namespace Cannonball.Client.Shared.Network
         { get; set; }
 
         event EventHandler<IShip> NewShipAdded;
+        event EventHandler<IEnumerable<IShip>> ObjectListUpdated;
         void AddShip(IShip ship);
 
         void Update();

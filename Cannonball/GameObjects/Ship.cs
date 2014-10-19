@@ -2,6 +2,7 @@
 using Cannonball.Engine.Graphics.Camera;
 using Cannonball.Engine.Inputs;
 using Cannonball.Engine.Procedural.Objects;
+using Cannonball.Shared.DTO;
 using Cannonball.Shared.GameObjects;
 using Microsoft.Xna.Framework;
 using System;
@@ -53,6 +54,8 @@ namespace Cannonball.GameObjects
             : base(game)
         {
             Camera = (ICamera)game.Services.GetService(typeof(ICamera));
+
+            this.IsPlayerControlled = ship.IsPlayerControlled;
 
             obj = new ComplexObject(GraphicsDevice, 1f, Primitives.Cube);
             obj.Position = ship.Position;

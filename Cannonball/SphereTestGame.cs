@@ -9,6 +9,7 @@ using Cannonball.Engine.Procedural.Objects;
 using Cannonball.Engine.Procedural.Textures;
 using Cannonball.Engine.Utils.Diagnostics;
 using Cannonball.GameObjects;
+using Cannonball.Shared.DTO;
 using Cannonball.Shared.GameObjects;
 using DFNetwork.Framework.Client;
 using DFNetwork.Tcp.Client;
@@ -185,14 +186,23 @@ namespace Cannonball
             clientSession = ((networkClient.SessionManager as ClientSessionManager).Session as ICannonballClientSession);
 
             clientSession.NewShipAdded += clientSession_NewShipAdded;
+            clientSession.ObjectListUpdated += clientSession_ObjectListUpdated;
 
             ////thefuck!?
             while (myShip == null)
                 Thread.Sleep(10);
 
-
-
             base.LoadContent();
+        }
+
+        void clientSession_ObjectListUpdated(object sender, IEnumerable<IShip> e)
+        {
+            ships.Clear();
+            foreach(DtoShip newShip in e)
+            {
+                var ship = new Ship(this, newShip);
+                ships.Add(ship);
+            }
         }
 
         void clientSession_NewShipAdded(object sender, IShip e)
